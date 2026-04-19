@@ -4,27 +4,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lernzettel – Spring Framework & JPA</title>
-<!-- Prism.js Syntax Highlighting -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-one-dark.min.css">
 <style>
+  /* ─── Catppuccin Mocha Palette ────────────────────── */
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #22263a;
-    --border: #2e3350;
-    --accent: #6c8ef5;
-    --accent2: #a78bfa;
-    --green: #34d399;
-    --yellow: #fbbf24;
-    --red: #f87171;
-    --orange: #fb923c;
-    --text: #e2e8f0;
-    --muted: #8892aa;
-    --code-bg: #282c34;
-    --tag-blue: #1e3a5f;
-    --tag-purple: #2d1b69;
-    --tag-green: #064e3b;
-    --tag-orange: #431407;
+    --ctp-base:    #1e1e2e;
+    --ctp-mantle:  #181825;
+    --ctp-crust:   #11111b;
+    --ctp-surface0:#313244;
+    --ctp-surface1:#45475a;
+    --ctp-surface2:#585b70;
+    --ctp-overlay0:#6c7086;
+    --ctp-overlay1:#7f849c;
+    --ctp-text:    #cdd6f4;
+    --ctp-subtext0:#a6adc8;
+    --ctp-blue:    #89b4fa;
+    --ctp-lavender:#b4befe;
+    --ctp-mauve:   #cba6f7;
+    --ctp-red:     #f38ba8;
+    --ctp-peach:   #fab387;
+    --ctp-yellow:  #f9e2af;
+    --ctp-green:   #a6e3a1;
+    --ctp-teal:    #94e2d5;
+    --ctp-sky:     #89dceb;
+    --ctp-maroon:  #eba0ac;
+
+    --bg:       var(--ctp-base);
+    --surface:  var(--ctp-mantle);
+    --surface2: var(--ctp-surface0);
+    --border:   var(--ctp-surface1);
+    --accent:   var(--ctp-blue);
+    --accent2:  var(--ctp-mauve);
+    --green:    var(--ctp-green);
+    --yellow:   var(--ctp-yellow);
+    --red:      var(--ctp-red);
+    --orange:   var(--ctp-peach);
+    --text:     var(--ctp-text);
+    --muted:    var(--ctp-overlay0);
+    --code-bg:  var(--ctp-mantle);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -40,177 +56,149 @@
   /* ─── Layout ──────────────────────────────────────── */
   .wrapper { display: flex; min-height: 100vh; }
   nav {
-    width: 280px;
-    min-width: 280px;
-    background: var(--surface);
+    width: 280px; min-width: 280px;
+    background: var(--ctp-crust);
     border-right: 1px solid var(--border);
     padding: 24px 0;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
+    position: sticky; top: 0;
+    height: 100vh; overflow-y: auto;
   }
   nav h2 {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--muted);
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--muted);
     padding: 16px 20px 6px;
   }
   nav a {
-    display: block;
-    padding: 6px 20px;
-    color: var(--muted);
-    font-size: 13.5px;
-    border-left: 2px solid transparent;
-    transition: all .15s;
+    display: block; padding: 6px 20px;
+    color: var(--muted); font-size: 13.5px;
+    border-left: 2px solid transparent; transition: all .15s;
   }
-  nav a:hover { color: var(--text); background: var(--surface2); border-left-color: var(--accent); text-decoration: none; }
+  nav a:hover { color: var(--text); background: var(--surface); border-left-color: var(--accent); text-decoration: none; }
   nav .nav-sub { padding-left: 34px; font-size: 12.5px; }
-  main {
-    flex: 1;
-    max-width: 940px;
-    padding: 48px 52px;
-  }
+  main { flex: 1; max-width: 940px; padding: 48px 52px; }
 
   /* ─── Header ──────────────────────────────────────── */
   .page-title {
-    font-size: 32px;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 32px; font-weight: 700;
+    background: linear-gradient(135deg, var(--ctp-blue), var(--ctp-mauve));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     margin-bottom: 6px;
   }
   .page-sub { color: var(--muted); font-size: 14px; margin-bottom: 48px; }
 
   /* ─── Sections ────────────────────────────────────── */
   section { margin-bottom: 56px; }
-  h1.sec { font-size: 22px; font-weight: 700; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 24px; color: var(--accent); }
-  h2.sub { font-size: 17px; font-weight: 600; color: var(--accent2); margin: 32px 0 12px; }
-  h3.sub2 { font-size: 14px; font-weight: 600; color: var(--yellow); margin: 22px 0 8px; }
+  h1.sec { font-size: 22px; font-weight: 700; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 24px; color: var(--ctp-blue); }
+  h2.sub { font-size: 17px; font-weight: 600; color: var(--ctp-mauve); margin: 32px 0 12px; }
+  h3.sub2 { font-size: 14px; font-weight: 600; color: var(--ctp-yellow); margin: 22px 0 8px; }
   p { margin-bottom: 10px; }
   ul, ol { padding-left: 22px; margin-bottom: 10px; }
   li { margin-bottom: 4px; }
 
-  /* ─── Annotations / Tags ──────────────────────────── */
+  /* ─── Annotation tags ─────────────────────────────── */
   .ann {
     display: inline-block;
     font-family: 'Cascadia Code', 'Fira Code', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 5px;
-    white-space: nowrap;
+    font-size: 13px; font-weight: 600;
+    padding: 2px 8px; border-radius: 5px; white-space: nowrap;
   }
-  .ann-blue  { background: var(--tag-blue);   color: #7dd3fc; border: 1px solid #1d4ed8; }
-  .ann-purple{ background: var(--tag-purple);  color: #c4b5fd; border: 1px solid #6d28d9; }
-  .ann-green { background: var(--tag-green);  color: #6ee7b7; border: 1px solid #059669; }
-  .ann-orange{ background: var(--tag-orange); color: #fdba74; border: 1px solid #c2410c; }
-  .ann-yellow{ background: #2d2006;           color: #fde68a; border: 1px solid #b45309; }
+  .ann-blue   { background: #1e2d4f; color: var(--ctp-blue);   border: 1px solid #2a4a7f; }
+  .ann-purple { background: #2a1f4a; color: var(--ctp-mauve);  border: 1px solid #4a3578; }
+  .ann-green  { background: #1a3028; color: var(--ctp-green);  border: 1px solid #2a5040; }
+  .ann-orange { background: #3a2010; color: var(--ctp-peach);  border: 1px solid #5a3820; }
+  .ann-yellow { background: #2d2410; color: var(--ctp-yellow); border: 1px solid #5a4820; }
 
-  /* ─── Code blocks (Prism override) ───────────────── */
-  pre[class*="language-"] {
-    border-left: 3px solid var(--accent) !important;
-    border-radius: 8px !important;
-    margin: 12px 0 !important;
-    font-size: 12.5px !important;
-    line-height: 1.7 !important;
-  }
-  code:not([class]) {
+  /* ─── Code blocks ─────────────────────────────────── */
+  pre {
+    background: var(--ctp-crust);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--ctp-blue);
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
     font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
     font-size: 12.5px;
-    background: var(--code-bg);
+    line-height: 1.75;
+    margin: 12px 0;
+    tab-size: 2;
+  }
+  pre code {
+    font-family: inherit; font-size: inherit;
+    background: none; border: none; padding: 0;
+    color: var(--ctp-text);
+  }
+  code:not(pre code) {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 12.5px;
+    background: var(--ctp-surface0);
     border: 1px solid var(--border);
-    padding: 1px 5px;
-    border-radius: 4px;
-    color: #a5f3fc;
+    padding: 1px 6px; border-radius: 4px;
+    color: var(--ctp-sky);
   }
 
   /* ─── Cards ───────────────────────────────────────── */
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 22px;
-    margin-bottom: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 22px; margin-bottom: 14px;
   }
   .card-title { font-weight: 700; margin-bottom: 6px; font-size: 14px; }
-  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card-grid   { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .card-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-  @media (max-width: 700px) { .card-grid, .card-grid-3 { grid-template-columns: 1fr; } }
 
   /* ─── Tables ──────────────────────────────────────── */
   table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13.5px; }
-  th { background: var(--surface2); color: var(--accent); font-weight: 600; text-align: left; padding: 9px 14px; border: 1px solid var(--border); }
+  th { background: var(--ctp-surface0); color: var(--ctp-blue); font-weight: 600; text-align: left; padding: 9px 14px; border: 1px solid var(--border); }
   td { padding: 8px 14px; border: 1px solid var(--border); vertical-align: top; }
-  tr:nth-child(even) td { background: #141720; }
+  tr:nth-child(even) td { background: #16161e; }
 
-  /* ─── Info / Warning boxes ────────────────────────── */
-  .box {
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin: 14px 0;
-    border-left: 4px solid;
-    font-size: 14px;
-  }
-  .box-blue  { background: #0f1f38; border-color: var(--accent);  color: #bfdbfe; }
-  .box-green { background: #052e16; border-color: var(--green);   color: #bbf7d0; }
-  .box-yellow{ background: #2d1d00; border-color: var(--yellow);  color: #fef08a; }
-  .box-red   { background: #2d0f0f; border-color: var(--red);     color: #fecaca; }
+  /* ─── Info boxes ──────────────────────────────────── */
+  .box { border-radius: 8px; padding: 14px 18px; margin: 14px 0; border-left: 4px solid; font-size: 14px; }
+  .box-blue   { background: #1a2340; border-color: var(--ctp-blue);   color: #c0d8ff; }
+  .box-green  { background: #1a2d1e; border-color: var(--ctp-green);  color: #c8f0cc; }
+  .box-yellow { background: #2d2510; border-color: var(--ctp-yellow); color: var(--ctp-yellow); }
+  .box-red    { background: #2d1520; border-color: var(--ctp-red);    color: #ffcccc; }
   .box strong { display: block; margin-bottom: 4px; }
 
-  /* ─── EINFACH ERKLÄRT boxes ───────────────────────── */
+  /* ─── Einfach erklärt ─────────────────────────────── */
   .einfach {
-    background: #1a1506;
-    border: 1px solid #78350f;
-    border-left: 4px solid #f59e0b;
+    background: #211d2e;
+    border: 1px solid var(--ctp-mauve);
+    border-left: 4px solid var(--ctp-mauve);
     border-radius: 8px;
-    padding: 14px 18px;
-    margin: 14px 0;
-    font-size: 13.5px;
-    color: #fde68a;
-    position: relative;
+    padding: 14px 18px; margin: 14px 0;
+    font-size: 13.5px; color: #ddd6fe;
   }
   .einfach::before {
     content: "💡 Einfach erklärt";
-    display: block;
-    font-weight: 700;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #f59e0b;
+    display: block; font-weight: 700;
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--ctp-mauve);
     margin-bottom: 6px;
   }
-  .einfach p { margin-bottom: 6px; color: #fde68a; }
+  .einfach p { margin-bottom: 6px; color: #ddd6fe; }
   .einfach p:last-child { margin-bottom: 0; }
-  .einfach ul { color: #fde68a; margin-bottom: 0; }
+  .einfach ul { color: #ddd6fe; margin-bottom: 0; }
 
-  /* ─── Divider ─────────────────────────────────────── */
+  /* ─── Tree ────────────────────────────────────────── */
+  .tree {
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 13px; line-height: 1.8;
+    background: var(--ctp-crust); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 18px;
+  }
+  .t-root { color: var(--ctp-blue);  font-weight: 700; }
+  .t-node { color: var(--ctp-mauve); }
+  .t-leaf { color: var(--ctp-green); }
+  .t-note { color: var(--muted); font-style: italic; }
+
+  /* ─── Badges ──────────────────────────────────────── */
+  .badge { display: inline-block; font-size: 11px; padding: 2px 7px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+  .badge-aufgabe1 { background: #1e2d4f; color: var(--ctp-blue); }
+  .badge-aufgabe2 { background: #1a3028; color: var(--ctp-green); }
+  .badge-aufgabe3 { background: #2a1f4a; color: var(--ctp-mauve); }
+
   hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
 
-  /* ─── Badge ───────────────────────────────────────── */
-  .badge {
-    display: inline-block;
-    font-size: 11px;
-    padding: 2px 7px;
-    border-radius: 20px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-  }
-  .badge-aufgabe1 { background: #1e3a5f; color: #7dd3fc; }
-  .badge-aufgabe2 { background: #064e3b; color: #6ee7b7; }
-  .badge-aufgabe3 { background: #2d1b69; color: #c4b5fd; }
-
-  /* ─── Hierarchy tree ──────────────────────────────── */
-  .tree { font-family: monospace; font-size: 13px; line-height: 1.8; background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; }
-  .tree .t-root  { color: #7dd3fc; font-weight: 700; }
-  .tree .t-node  { color: #c4b5fd; }
-  .tree .t-leaf  { color: #6ee7b7; }
-  .tree .t-note  { color: var(--muted); font-style: italic; }
-
-  /* scrollbar */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -219,7 +207,7 @@
 <body>
 <div class="wrapper">
 
-<!-- ═══════════════════════════════════════════════════ NAVIGATION -->
+<!-- ═══════ NAVIGATION ════════════════════════════════ -->
 <nav>
   <h2>Navigation</h2>
   <a href="#spring-grundlagen">1 · Spring Grundlagen</a>
@@ -230,14 +218,12 @@
   <a href="#ioc" class="nav-sub">IoC-Prinzip</a>
   <a href="#component-scan" class="nav-sub">Component Scan</a>
   <a href="#annotations-uebersicht" class="nav-sub">Annotations-Übersicht</a>
-
   <h2>Spring Data / JPA</h2>
   <a href="#orm">2 · ORM & JPA</a>
   <a href="#entities" class="nav-sub">Entities</a>
   <a href="#repositories" class="nav-sub">Repositories</a>
   <a href="#derived-queries" class="nav-sub">Derived Queries</a>
   <a href="#jpql" class="nav-sub">JPQL & @Query</a>
-
   <h2>Beziehungen</h2>
   <a href="#relationships">3 · Beziehungstypen</a>
   <a href="#onetomany" class="nav-sub">@OneToMany / @ManyToOne</a>
@@ -246,51 +232,49 @@
   <a href="#cascade" class="nav-sub">Cascading</a>
   <a href="#loading" class="nav-sub">Lazy vs. Eager</a>
   <a href="#bidirectional" class="nav-sub">Bidirektional</a>
-
   <h2>Transaktionen</h2>
   <a href="#transactions">4 · Transaktionen</a>
   <a href="#acid" class="nav-sub">ACID</a>
   <a href="#transactional" class="nav-sub">@Transactional</a>
-
   <h2>Konfiguration</h2>
   <a href="#config">5 · Konfiguration</a>
   <a href="#lombok" class="nav-sub">Lombok</a>
   <a href="#h2" class="nav-sub">H2 Datenbank</a>
-  <a href="#code-beispiele">6 · Vollständige Codebeispiele</a>
+  <a href="#code-beispiele">6 · Vollständige Beispiele</a>
 </nav>
 
-<!-- ═══════════════════════════════════════════════════ MAIN -->
+<!-- ═══════ MAIN ══════════════════════════════════════ -->
 <main>
   <div class="page-title">Spring Framework &amp; JPA</div>
   <div class="page-sub">Vollständiger Lernzettel · DHBW Ravensburg · MyMovieDatabase-Projekt</div>
 
-  <!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════
        1. SPRING GRUNDLAGEN
-  ═══════════════════════════════════════════════════════════════ -->
+  ══════════════════════════════════════════════════ -->
   <section id="spring-grundlagen">
     <h1 class="sec">1 · Spring Grundlagen</h1>
 
     <div class="einfach">
-      <p>Spring ist ein riesiges Werkzeugkasten für Java-Entwickler. Statt alles selbst zu verdrahten (wer ruft wen auf? wer erstellt welches Objekt?), übernimmt Spring das für dich. Du sagst Spring <em>was</em> du brauchst, Spring kümmert sich um das <em>Wie</em>.</p>
+      <p>Spring ist ein riesiger Werkzeugkasten für Java-Entwickler. Statt alles selbst zu verdrahten (wer ruft wen auf? wer erstellt welches Objekt?), übernimmt Spring das für dich. Du sagst Spring <em>was</em> du brauchst, Spring kümmert sich um das <em>Wie</em>.</p>
     </div>
 
     <p>Spring ist ein <strong>Open-Source-Framework</strong> zur plattformunabhängigen Entwicklung von Web-Applikationen mit Java. Es basiert auf vier Kernprinzipien:</p>
 
     <div class="card-grid" style="margin-top:14px">
       <div class="card">
-        <div class="card-title" style="color:var(--accent)">Convention over Configuration</div>
+        <div class="card-title" style="color:var(--ctp-blue)">Convention over Configuration</div>
         Best-Practice-Annahmen sind voreingestellt; Entwickler spezifizieren nur Abweichungen vom Standard. Weniger Konfigurationsaufwand.
       </div>
       <div class="card">
-        <div class="card-title" style="color:var(--accent)">Modularität</div>
+        <div class="card-title" style="color:var(--ctp-blue)">Modularität</div>
         Spring ist in Module aufgeteilt, die nur bei Bedarf geladen werden (Web, Data, Security …).
       </div>
       <div class="card">
-        <div class="card-title" style="color:var(--accent)">Schichtenarchitektur</div>
+        <div class="card-title" style="color:var(--ctp-blue)">Schichtenarchitektur</div>
         Klare Trennung von Presentation, Business Logic und Data Storage.
       </div>
       <div class="card">
-        <div class="card-title" style="color:var(--accent)">Dependency Injection</div>
+        <div class="card-title" style="color:var(--ctp-blue)">Dependency Injection</div>
         Spring übernimmt die Verwaltung von Objekten, um Komplexität zu reduzieren.
       </div>
     </div>
@@ -308,19 +292,17 @@
     <h2 class="sub" id="architektur">Schichtenarchitektur</h2>
 
     <div class="einfach">
-      <p>Die App ist in Schichten aufgeteilt, damit jede Klasse genau <em>eine</em> Aufgabe hat. Der Controller redet mit dem Browser, der Service denkt nach, das Repository spricht mit der Datenbank – und keiner mischt sich in die Arbeit des anderen ein.</p>
+      <p>Die App ist in Schichten aufgeteilt, damit jede Klasse genau <em>eine</em> Aufgabe hat. Der Controller redet mit dem Browser, der Service denkt nach, das Repository spricht mit der Datenbank – keiner mischt sich in die Arbeit des anderen.</p>
     </div>
 
-    <p>Spring Boot strukturiert Anwendungen in <strong>vier funktionale Schichten</strong> (Layer):</p>
+    <p>Spring Boot strukturiert Anwendungen in <strong>vier funktionale Schichten</strong>:</p>
 
     <table>
-      <tr>
-        <th>Layer</th><th>Annotation</th><th>Aufgabe</th>
-      </tr>
+      <tr><th>Layer</th><th>Annotation</th><th>Aufgabe</th></tr>
       <tr>
         <td><strong>Controller</strong></td>
         <td><span class="ann ann-blue">@Controller</span> / <span class="ann ann-blue">@RestController</span></td>
-        <td>Verarbeitet Client-Anfragen (HTTP-Requests) und gibt Antworten zurück (HTML, JSON, …)</td>
+        <td>Verarbeitet Client-Anfragen (HTTP-Requests) und gibt Antworten zurück (HTML, JSON …)</td>
       </tr>
       <tr>
         <td><strong>Service</strong></td>
@@ -353,7 +335,7 @@
 
     <div class="einfach">
       <p>Normalerweise erstellst du Objekte mit <code>new MeineKlasse()</code>. Bei Spring machst du das <strong>nicht mehr selbst</strong> – du markierst die Klasse mit einer Annotation und Spring erstellt und verwaltet das Objekt für dich. Dieses von Spring verwaltete Objekt heißt <strong>Bean</strong>.</p>
-      <p>Vergleich: Du gehst in ein Restaurant. Du bestellst (=Annotation) und der Kellner (=Spring) bringt dir das Essen (=Objekt). Du kochst nicht selbst.</p>
+      <p>Vergleich: Du gehst ins Restaurant. Du bestellst (= Annotation) und der Kellner (= Spring) bringt dir das Essen (= Objekt). Du kochst nicht selbst.</p>
     </div>
 
     <div class="card">
@@ -361,8 +343,6 @@
       Ein <strong>Bean</strong> ist eine Java-Klasse, deren Lebenszyklus (<em>Erstellung, Konfiguration, Skalierung, Löschung</em>) vollständig vom <strong>Spring-Framework verwaltet</strong> wird.<br><br>
       Beans werden <u>nicht</u> manuell per <code>new</code> instanziiert – Spring übernimmt das im sogenannten <strong>IoC-Container</strong> (Application Context).
     </div>
-
-    <p>Beans werden wie normale Java-Klassen geschrieben und über <strong>Stereotyp-Annotationen</strong> als Bean deklariert:</p>
 
     <pre><code class="language-java">@Service
 public class MovieServiceImpl implements MovieService {
@@ -374,7 +354,7 @@ public class MovieServiceImpl implements MovieService {
     <h2 class="sub" id="stereotypes">Stereotype-Annotationen (Bean-Typen)</h2>
 
     <div class="einfach">
-      <p>Stereotypen sind wie Berufsbezeichnungen für deine Klassen. <code>@Service</code> bedeutet "ich bin ein Buchhalter (Geschäftslogik)", <code>@Repository</code> bedeutet "ich bin ein Archivar (Datenbank)", <code>@Controller</code> bedeutet "ich bin die Rezeption (HTTP-Anfragen)".</p>
+      <p>Stereotypen sind wie Berufsbezeichnungen für deine Klassen. <code>@Service</code> = Buchhalter (Geschäftslogik), <code>@Repository</code> = Archivar (Datenbank), <code>@Controller</code> = Rezeption (HTTP-Anfragen).</p>
       <p>Alle sind letztendlich <code>@Component</code> – das ist der Oberbegriff für "von Spring verwaltetes Objekt".</p>
     </div>
 
@@ -391,30 +371,12 @@ public class MovieServiceImpl implements MovieService {
 
     <table style="margin-top:14px">
       <tr><th>Annotation</th><th>Schicht</th><th>Zweck &amp; Details</th></tr>
-      <tr>
-        <td><span class="ann ann-blue">@Component</span></td><td>Generisch</td>
-        <td>Basis für alle Stereotypen. Markiert eine Klasse als Spring-verwalteten Bean. Kein expliziter Layer. Verwenden wenn keine spezialisierte Annotation passt.</td>
-      </tr>
-      <tr>
-        <td><span class="ann ann-blue">@Controller</span></td><td>Presentation</td>
-        <td>Kommuniziert mit dem Benutzer/API. Nimmt HTTP-Requests entgegen und gibt Antworten in verschiedenen Formaten zurück (HTML, JSON, …).</td>
-      </tr>
-      <tr>
-        <td><span class="ann ann-blue">@RestController</span></td><td>Presentation</td>
-        <td>Unterklasse von <code>@Controller</code>. Gibt automatisch JSON zurück (kombiniert <code>@Controller + @ResponseBody</code>). Für REST-APIs.</td>
-      </tr>
-      <tr>
-        <td><span class="ann ann-purple">@Service</span></td><td>Business Logic</td>
-        <td>Kapselt Geschäftslogik. Wird von Controllern aufgerufen. Kein direkter Datenbankzugriff – das macht das Repository.</td>
-      </tr>
-      <tr>
-        <td><span class="ann ann-green">@Repository</span></td><td>Data Access</td>
-        <td>Datenspeicherung und -verwaltung. Kapselt Datenbankzugriffe. Spring übersetzt DB-Exceptions automatisch in Spring-Exceptions.</td>
-      </tr>
-      <tr>
-        <td><span class="ann ann-yellow">@Configuration</span></td><td>Infrastruktur</td>
-        <td>"Configuration as Code"-Paradigma. Konfiguriert Spring-Infrastruktur programmatisch statt in XML-Dateien.</td>
-      </tr>
+      <tr><td><span class="ann ann-blue">@Component</span></td><td>Generisch</td><td>Basis für alle Stereotypen. Markiert eine Klasse als Spring-verwalteten Bean. Kein expliziter Layer.</td></tr>
+      <tr><td><span class="ann ann-blue">@Controller</span></td><td>Presentation</td><td>Kommuniziert mit dem Benutzer/API. Nimmt HTTP-Requests entgegen, gibt Antworten in verschiedenen Formaten zurück.</td></tr>
+      <tr><td><span class="ann ann-blue">@RestController</span></td><td>Presentation</td><td>Unterklasse von <code>@Controller</code>. Gibt automatisch JSON zurück (kombiniert <code>@Controller + @ResponseBody</code>). Für REST-APIs.</td></tr>
+      <tr><td><span class="ann ann-purple">@Service</span></td><td>Business Logic</td><td>Kapselt Geschäftslogik. Wird von Controllern aufgerufen. Kein direkter Datenbankzugriff.</td></tr>
+      <tr><td><span class="ann ann-green">@Repository</span></td><td>Data Access</td><td>Datenspeicherung und -verwaltung. Spring übersetzt DB-Exceptions automatisch in Spring-Exceptions.</td></tr>
+      <tr><td><span class="ann ann-yellow">@Configuration</span></td><td>Infrastruktur</td><td>"Configuration as Code"-Paradigma. Konfiguriert Spring-Infrastruktur programmatisch.</td></tr>
     </table>
 
     <!-- DI -->
@@ -422,7 +384,7 @@ public class MovieServiceImpl implements MovieService {
 
     <div class="einfach">
       <p>Stell dir vor, ein Auto baut sich seinen Motor selbst – das wäre schlechtes Design. Besser: Der Motor wird dem Auto von außen gegeben. Das ist Dependency Injection.</p>
-      <p>In Java bedeutet das: Eine Klasse bekommt ihre Abhängigkeiten (andere Objekte die sie braucht) von Spring automatisch "injiziert" (hineingegeben) – sie baut sie nicht selbst mit <code>new</code>.</p>
+      <p>In Java: Eine Klasse bekommt ihre Abhängigkeiten von Spring automatisch "injiziert" – sie baut sie nicht selbst mit <code>new</code>.</p>
     </div>
 
     <div class="card">
@@ -433,37 +395,36 @@ public class MovieServiceImpl implements MovieService {
     <p>Es gibt <strong>drei Arten</strong> der Dependency Injection:</p>
 
     <div class="card-grid-3">
-      <div class="card" style="border-top: 3px solid var(--green)">
-        <div class="card-title" style="color:var(--green)">1. Constructor Injection ✓</div>
+      <div class="card" style="border-top:3px solid var(--ctp-green)">
+        <div class="card-title" style="color:var(--ctp-green)">1. Constructor Injection ✓</div>
         <strong>Best Practice seit Spring 3.5</strong><br>
-        Abhängigkeiten werden über den Konstruktor übergeben. Das Objekt ist von Beginn an vollständig.
+        Abhängigkeiten werden über den Konstruktor übergeben. Das Objekt ist von Anfang an vollständig.
         <pre><code class="language-java">@Service
-public class ControllerImpl {
-  private final MovieService svc;
+public class CtrlImpl {
+  private final MovieService s;
 
   // @Autowired optional
-  public ControllerImpl(
-      MovieService svc) {
-    this.svc = svc;
+  public CtrlImpl(MovieService s) {
+    this.s = s;
   }
 }</code></pre>
       </div>
-      <div class="card" style="border-top: 3px solid var(--yellow)">
-        <div class="card-title" style="color:var(--yellow)">2. Setter Injection</div>
-        Abhängigkeiten werden nach der Instanziierung über Setter-Methoden gesetzt.
+      <div class="card" style="border-top:3px solid var(--ctp-yellow)">
+        <div class="card-title" style="color:var(--ctp-yellow)">2. Setter Injection</div>
+        Abhängigkeiten werden nach der Instanziierung über Setter gesetzt.
         <pre><code class="language-java">@Service
 public class MyService {
   private Dep dep;
 
   @Autowired
-  public void setDep(Dep dep) {
-    this.dep = dep;
+  public void setDep(Dep d) {
+    this.dep = d;
   }
 }</code></pre>
       </div>
-      <div class="card" style="border-top: 3px solid var(--red)">
-        <div class="card-title" style="color:var(--red)">3. Field Injection ✗</div>
-        Direkt auf das Feld annotiert. <strong>Nicht empfohlen</strong> – schlechte Testbarkeit, versteckte Abhängigkeiten.
+      <div class="card" style="border-top:3px solid var(--ctp-red)">
+        <div class="card-title" style="color:var(--ctp-red)">3. Field Injection ✗</div>
+        Direkt auf das Feld. <strong>Nicht empfohlen</strong> – schlechte Testbarkeit.
         <pre><code class="language-java">@Service
 public class MyService {
   @Autowired
@@ -479,12 +440,6 @@ public class MyService {
     <div class="einfach">
       <p>Normalerweise ruft <em>dein</em> Code eine Bibliothek auf. Mit IoC dreht sich das um: Das Framework ruft <em>deinen</em> Code auf. Du gibst die Kontrolle ab.</p>
       <p>Konkret: Ohne IoC erstellt <code>Car</code> selbst einen <code>PetrolEngine</code>. Mit IoC bekommt <code>Car</code> irgendeinen <code>Engine</code> von außen – er weiß gar nicht ob es ein Benziner, Diesel oder Elektro ist. Das macht den Code flexibel und testbar.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-title">IoC-Prinzip</div>
-      Kernparadigma: Objekte sollen so <strong>lose gekoppelt (entkoppelt)</strong> wie möglich sein.<br>
-      <strong>Grundidee:</strong> Klassen nutzen andere Klassen, <em>ohne</em> deren Implementierungsdetails kennen zu müssen.
     </div>
 
     <pre><code class="language-java">// ❌ Ohne IoC – stark gekoppelt (SCHLECHT)
@@ -506,7 +461,7 @@ public class Car {
       <ul style="margin:4px 0 0">
         <li>Entkoppelte Weiterentwicklung interagierender Klassen</li>
         <li>Reduzierte Code-Komplexität durch Schichtentrennung</li>
-        <li>Verbesserte Testbarkeit (lose Kopplung ermöglicht Test-Fassaden / Mocking)</li>
+        <li>Verbesserte Testbarkeit (lose Kopplung ermöglicht Mocking)</li>
         <li>Implementierungen zur Laufzeit austauschbar</li>
       </ul>
     </div>
@@ -515,7 +470,7 @@ public class Car {
     <h2 class="sub" id="component-scan">Component Scan</h2>
 
     <div class="einfach">
-      <p>Beim Anwendungsstart scannt Spring automatisch alle deine Klassen nach Annotationen wie <code>@Service</code>, <code>@Repository</code> etc. Wer eine solche Annotation hat, wird als Bean registriert und verwaltet. Du musst nichts manuell registrieren.</p>
+      <p>Beim Anwendungsstart scannt Spring automatisch alle Klassen nach Annotationen wie <code>@Service</code>, <code>@Repository</code> etc. Wer eine solche Annotation hat, wird als Bean registriert. Du musst nichts manuell registrieren.</p>
     </div>
 
     <div class="card">
@@ -528,11 +483,11 @@ public class Car {
     </div>
 
     <div class="box box-yellow">
-      <strong>Wichtig:</strong> Das Paket mit <code>@SpringBootApplication</code> (inkl. Unterpakete) wird automatisch gescannt. Klassen außerhalb dieses Pakets werden <em>nicht</em> gefunden.
+      <strong>Wichtig:</strong> Das Paket mit <code>@SpringBootApplication</code> (inkl. Unterpakete) wird automatisch gescannt. Klassen außerhalb werden <em>nicht</em> gefunden.
     </div>
 
     <!-- Annotations Übersicht -->
-    <h2 class="sub" id="annotations-uebersicht">Alle wichtigen Spring-Annotationen (Übersicht)</h2>
+    <h2 class="sub" id="annotations-uebersicht">Alle wichtigen Spring-Annotationen</h2>
 
     <table>
       <tr><th>Annotation</th><th>Ziel</th><th>Bedeutung</th></tr>
@@ -544,14 +499,14 @@ public class Car {
       <tr><td><span class="ann ann-green">@Repository</span></td><td>Klasse/Interface</td><td>Data-Access-Layer. Datenbankzugriff.</td></tr>
       <tr><td><span class="ann ann-yellow">@Configuration</span></td><td>Klasse</td><td>Konfigurationsklasse (Configuration as Code).</td></tr>
       <tr><td><span class="ann ann-blue">@Autowired</span></td><td>Konstruktor/Feld/Setter</td><td>Markiert Abhängigkeit → Spring injiziert automatisch.</td></tr>
-      <tr><td><span class="ann ann-blue">@EventListener</span></td><td>Methode</td><td>Methode wird bei bestimmtem Anwendungsevent aufgerufen. Im Projekt: <code>ApplicationReadyEvent</code> → läuft nach dem Start.</td></tr>
+      <tr><td><span class="ann ann-blue">@EventListener</span></td><td>Methode</td><td>Methode wird bei Anwendungsevent aufgerufen. Im Projekt: <code>ApplicationReadyEvent</code> → läuft nach dem Start.</td></tr>
       <tr><td><span class="ann ann-purple">@Transactional</span></td><td>Klasse/Methode</td><td>Methode/Klasse wird in einem Transaktionskontext ausgeführt.</td></tr>
     </table>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════
        2. ORM & JPA
-  ═══════════════════════════════════════════════════════════════ -->
+  ══════════════════════════════════════════════════ -->
   <section id="orm">
     <h1 class="sec">2 · ORM, JPA &amp; Spring Data</h1>
 
@@ -559,11 +514,11 @@ public class Car {
 
     <div class="einfach">
       <p>Java denkt in <strong>Objekten</strong> (ein <code>Movie</code>-Objekt hat ein Feld <code>director</code> das auf ein <code>Director</code>-Objekt zeigt). Eine Datenbank denkt in <strong>Tabellen</strong> (die MOVIE-Tabelle hat eine Spalte <code>director_id</code>).</p>
-      <p>ORM ist der Übersetzer dazwischen. Du arbeitest mit Java-Objekten, ORM übersetzt das automatisch in SQL-Tabellen und zurück.</p>
+      <p>ORM ist der Übersetzer dazwischen. Du arbeitest mit Java-Objekten, ORM übersetzt das automatisch in SQL und zurück.</p>
     </div>
 
     <div class="card-grid">
-      <div class="card" style="border-top:3px solid var(--accent)">
+      <div class="card" style="border-top:3px solid var(--ctp-blue)">
         <div class="card-title">Objektorientierte Anwendung (OOP)</div>
         <ul>
           <li>Entitäten als <strong>Objekte</strong> modelliert</li>
@@ -571,7 +526,7 @@ public class Car {
           <li>Klassen mit Verhalten (Methoden)</li>
         </ul>
       </div>
-      <div class="card" style="border-top:3px solid var(--orange)">
+      <div class="card" style="border-top:3px solid var(--ctp-peach)">
         <div class="card-title">Relationale Datenbank (SQL)</div>
         <ul>
           <li><strong>Tabellen</strong> im relationalen Schema</li>
@@ -580,7 +535,6 @@ public class Car {
         </ul>
       </div>
     </div>
-    <p>→ Diese grundlegend verschiedenen Paradigmen überbrückt das <strong>Object-Relational Mapping (ORM)</strong>.</p>
 
     <h2 class="sub">ORM (Object-Relational Mapping)</h2>
     <div class="card">
@@ -592,9 +546,8 @@ public class Car {
       </ul>
     </div>
 
-    <h3 class="sub2">ORM-Operationen</h3>
     <table>
-      <tr><th>Operation</th><th>Bedeutung</th></tr>
+      <tr><th>ORM-Operation</th><th>Bedeutung</th></tr>
       <tr><td><strong>create</strong></td><td>Anwendungsobjekt wird in DB eingefügt (INSERT)</td></tr>
       <tr><td><strong>read</strong></td><td>DB-Datensatz wird zu Anwendungsobjekt konvertiert (SELECT)</td></tr>
       <tr><td><strong>update</strong></td><td>Änderungen am Objekt werden in DB synchronisiert (UPDATE)</td></tr>
@@ -602,18 +555,17 @@ public class Car {
     </table>
 
     <div class="card-grid">
-      <div class="card" style="border-left:3px solid var(--green)">
-        <div class="card-title" style="color:var(--green)">Vorteile ORM</div>
+      <div class="card" style="border-left:3px solid var(--ctp-green)">
+        <div class="card-title" style="color:var(--ctp-green)">Vorteile ORM</div>
         <ul>
           <li>Harmonisierte DB-Struktur</li>
           <li>Hoher Automatisierungsgrad</li>
-          <li>Reduzierte Datenkomplexität</li>
           <li>Schutz vor SQL-Injection</li>
-          <li>Einfacher DB-Wechsel (z. B. H2 → MySQL)</li>
+          <li>Einfacher DB-Wechsel (H2 → MySQL)</li>
         </ul>
       </div>
-      <div class="card" style="border-left:3px solid var(--red)">
-        <div class="card-title" style="color:var(--red)">Nachteile ORM</div>
+      <div class="card" style="border-left:3px solid var(--ctp-red)">
+        <div class="card-title" style="color:var(--ctp-red)">Nachteile ORM</div>
         <ul>
           <li>DB-Abstraktion kann Performance kosten</li>
           <li>Initiale Konfiguration komplex</li>
@@ -625,16 +577,16 @@ public class Car {
     <h2 class="sub">Glossar: JPA-Technologiestack</h2>
 
     <div class="einfach">
-      <p><strong>JPA</strong> ist nur ein Standard (ein Regelwerk, was Annotationen bedeuten sollen). <strong>Hibernate</strong> ist die eigentliche Implementierung die die Arbeit macht. <strong>Spring Data JPA</strong> setzt obendrauf noch Komfortfunktionen wie automatische Repositories.</p>
+      <p><strong>JPA</strong> ist nur ein Standard (ein Regelwerk). <strong>Hibernate</strong> ist die eigentliche Implementierung die die Arbeit macht. <strong>Spring Data JPA</strong> setzt obendrauf noch Komfortfunktionen.</p>
       <p>Kurz: JPA = Bauplan, Hibernate = Handwerker, Spring Data JPA = Polier der alles koordiniert.</p>
     </div>
 
     <table>
       <tr><th>Begriff</th><th>Erklärung</th></tr>
-      <tr><td><strong>JPA (Java Persistence API)</strong></td><td>Spezifikation/Standard für die Beschreibung von Entities und ORM in Java. Definiert Annotationen, Interfaces und Verhalten – <em>keine Implementierung</em>.</td></tr>
-      <tr><td><strong>Spring Data JPA</strong></td><td>Implementiert den JPA-Standard und bietet zusätzliche Komfortfunktionen (Repositories, Derived Queries …).</td></tr>
-      <tr><td><strong>Hibernate</strong></td><td>Populäres ORM-Framework; die Implementierung hinter Spring Data JPA. Generiert und führt SQL aus.</td></tr>
-      <tr><td><strong>JDBC</strong></td><td>Low-Level-Framework für direkten Datenbankzugriff (SQL-Statements manuell).</td></tr>
+      <tr><td><strong>JPA</strong></td><td>Spezifikation/Standard für ORM in Java. Definiert Annotationen und Interfaces – <em>keine Implementierung</em>.</td></tr>
+      <tr><td><strong>Spring Data JPA</strong></td><td>Implementiert den JPA-Standard + zusätzliche Komfortfunktionen (Repositories, Derived Queries …).</td></tr>
+      <tr><td><strong>Hibernate</strong></td><td>Populäres ORM-Framework; die eigentliche Implementierung hinter Spring Data JPA. Generiert und führt SQL aus.</td></tr>
+      <tr><td><strong>JDBC</strong></td><td>Low-Level-Framework für direkten Datenbankzugriff (SQL manuell).</td></tr>
       <tr><td><strong>JDBC-Driver</strong></td><td>Verbindet JDBC mit der konkreten Datenbank (H2, MySQL, PostgreSQL …).</td></tr>
     </table>
 
@@ -642,45 +594,38 @@ public class Car {
     <h2 class="sub" id="entities">Entities</h2>
 
     <div class="einfach">
-      <p>Eine Entity ist eine ganz normale Java-Klasse, die du mit <code>@Entity</code> markierst. Damit sagst du Hibernate: "Erstelle für diese Klasse eine Datenbanktabelle und speichere Objekte dieser Klasse darin." Jede Instanz der Klasse = eine Zeile in der Tabelle.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Was ist eine Entity?</div>
-      Eine Entity ist ein Datenobjekt, das in der Datenbank gespeichert wird. Sie wird mit <span class="ann ann-orange">@Entity</span> markiert und im Paket <code>model</code> abgelegt.
+      <p>Eine Entity ist eine ganz normale Java-Klasse mit <code>@Entity</code>. Damit sagst du Hibernate: "Erstelle für diese Klasse eine Datenbanktabelle." Jede Instanz der Klasse = eine Zeile in der Tabelle.</p>
     </div>
 
     <h3 class="sub2">Pflichtanforderungen einer Entity (JPA-Spezifikation):</h3>
     <ol>
-      <li><strong>Leerer Konstruktor</strong> (No-Arg Constructor) – Pflicht laut JPA-Spezifikation, damit Hibernate Objekte erstellen kann</li>
+      <li><strong>Leerer Konstruktor</strong> (No-Arg Constructor) – Hibernate braucht ihn um Objekte zu erstellen</li>
       <li><strong>Getter &amp; Setter</strong> für alle Attribute (manuell oder per Lombok)</li>
       <li><strong>Identifikationsschlüssel</strong> mit <span class="ann ann-orange">@Id</span> und <span class="ann ann-orange">@GeneratedValue</span></li>
     </ol>
 
-    <h3 class="sub2">Entity-Annotationen im Überblick</h3>
     <table>
       <tr><th>Annotation</th><th>Bedeutung</th></tr>
       <tr><td><span class="ann ann-orange">@Entity</span></td><td>Markiert die Klasse als persistierbare Datenbankentität → Hibernate erstellt Tabelle</td></tr>
-      <tr><td><span class="ann ann-orange">@Id</span></td><td>Identifiziert das Attribut als Primärschlüssel (eindeutiger Identifikator jedes Datensatzes)</td></tr>
-      <tr><td><span class="ann ann-orange">@GeneratedValue</span></td><td>Schlüssel wird von Hibernate auto-generiert (1, 2, 3, …). Verhindert Kollisionen.</td></tr>
+      <tr><td><span class="ann ann-orange">@Id</span></td><td>Identifiziert das Attribut als Primärschlüssel</td></tr>
+      <tr><td><span class="ann ann-orange">@GeneratedValue</span></td><td>Schlüssel wird von Hibernate auto-generiert (1, 2, 3, …)</td></tr>
       <tr><td><span class="ann ann-orange">@Column</span></td><td>Mappt Attribut auf Tabellenspalte (optional, für Umbenennung/Constraints)</td></tr>
       <tr><td><span class="ann ann-orange">@Table</span></td><td>Definiert Tabellenname (optional, Standard = Klassenname)</td></tr>
       <tr><td><span class="ann ann-orange">@JoinColumn</span></td><td>Definiert die Foreign-Key-Spalte für eine Beziehung (z. B. <code>director_id</code>)</td></tr>
       <tr><td><span class="ann ann-orange">@JoinTable</span></td><td>Definiert eine Zwischentabelle (für @ManyToMany)</td></tr>
     </table>
 
-    <pre><code class="language-java">// Vollständiges Entity-Beispiel aus dem Projekt
-@Entity
+    <pre><code class="language-java">@Entity
 @Getter @Setter @NoArgsConstructor  // Lombok generiert Getter, Setter und leeren Konstruktor
 public class Movie {
 
     @Id
     @GeneratedValue          // Hibernate vergibt automatisch 1, 2, 3, ...
-    private long id;         // Primärschlüssel
+    private long id;
 
     private String title;
-    private double duration;         // in Stunden
-    private LocalDate premiereDate;  // Datum als Java-Objekt, nicht String
+    private double duration;
+    private LocalDate premiereDate;
     private String description;
     private String trailerUrl;
     private String coverImgUrl;
@@ -691,64 +636,45 @@ public class Movie {
     <h2 class="sub" id="repositories">Repositories</h2>
 
     <div class="einfach">
-      <p>Ein Repository ist dein Datenbankassistent. Du schreibst nur ein Interface (keine Implementierung!), Spring Data JPA baut die echte Implementierung zur Laufzeit automatisch. Du bekommst sofort <code>save()</code>, <code>findAll()</code>, <code>delete()</code> etc. geschenkt.</p>
+      <p>Ein Repository ist dein Datenbankassistent. Du schreibst nur ein Interface (keine Implementierung!), Spring Data JPA baut die echte Implementierung automatisch. Du bekommst sofort <code>save()</code>, <code>findAll()</code>, <code>delete()</code> etc. geschenkt.</p>
     </div>
 
     <div class="card">
       <div class="card-title">Was ist ein Repository?</div>
-      Ein Repository abstrahiert den Datenbankzugriff für eine Entity. Es enthält alle Funktionen zum Speichern, Abrufen und Löschen von Entities.<br><br>
-      <strong>No-Code-Ansatz:</strong> Nur das Interface muss definiert werden – Spring generiert die Implementierung automatisch.
+      Ein Repository abstrahiert den Datenbankzugriff. <strong>No-Code-Ansatz:</strong> Nur das Interface muss definiert werden – Spring generiert die Implementierung automatisch.
     </div>
 
-    <p>Ein Repository erweitert <code>JpaRepository&lt;EntityTyp, PrimärschlüsselTyp&gt;</code>:</p>
-
     <pre><code class="language-java">@Repository
-public interface MovieRepository extends JpaRepository&lt;Movie, Long&gt; {
+public interface MovieRepository extends JpaRepository<Movie, Long> {
     // Spring implementiert automatisch:
     // save(), findById(), findAll(), delete(), count(), existsById(), ...
 }</code></pre>
 
-    <h3 class="sub2">Mitgelieferte JpaRepository-Methoden</h3>
     <table>
       <tr><th>Methode</th><th>SQL-Äquivalent</th><th>Beschreibung</th></tr>
-      <tr><td><code>save(entity)</code></td><td>INSERT / UPDATE</td><td>Entity in DB speichern oder aktualisieren</td></tr>
-      <tr><td><code>findById(id)</code></td><td>SELECT WHERE id=?</td><td>Entity anhand Primärschlüssel laden → gibt <code>Optional&lt;T&gt;</code> zurück</td></tr>
+      <tr><td><code>save(entity)</code></td><td>INSERT / UPDATE</td><td>Entity speichern oder aktualisieren</td></tr>
+      <tr><td><code>findById(id)</code></td><td>SELECT WHERE id=?</td><td>Entity per Primärschlüssel laden → gibt <code>Optional&lt;T&gt;</code> zurück</td></tr>
       <tr><td><code>findAll()</code></td><td>SELECT *</td><td>Alle Entities abrufen</td></tr>
       <tr><td><code>delete(entity)</code></td><td>DELETE</td><td>Entity löschen</td></tr>
       <tr><td><code>deleteById(id)</code></td><td>DELETE WHERE id=?</td><td>Entity per ID löschen</td></tr>
       <tr><td><code>count()</code></td><td>SELECT COUNT(*)</td><td>Anzahl der Einträge</td></tr>
-      <tr><td><code>existsById(id)</code></td><td>SELECT EXISTS</td><td>Prüft ob Entity existiert → gibt Boolean zurück</td></tr>
+      <tr><td><code>existsById(id)</code></td><td>SELECT EXISTS</td><td>Prüft ob Entity existiert</td></tr>
     </table>
 
     <!-- Derived Queries -->
-    <h2 class="sub" id="derived-queries">Derived Query Methods (Abgeleitete Anfragen)</h2>
+    <h2 class="sub" id="derived-queries">Derived Query Methods</h2>
 
     <div class="einfach">
-      <p>Spring liest den Methodennamen und generiert daraus automatisch die SQL-Abfrage. Du schreibst nur den Methodennamen nach dem Namensschema – Spring erledigt den Rest.</p>
+      <p>Spring liest den Methodennamen und generiert daraus automatisch die SQL-Abfrage. Du schreibst nur den Namen nach dem Schema – Spring erledigt den Rest.</p>
       <p>Beispiel: <code>findByTitleContaining("Matrix")</code> → Spring generiert <code>SELECT * FROM movie WHERE title LIKE '%Matrix%'</code></p>
     </div>
 
-    <div class="card">
-      Spring Data JPA kann Repository-Methoden anhand des <strong>Methodennamens automatisch implementieren</strong>. Keine manuelle SQL/JPQL-Implementierung nötig.
-    </div>
-
-    <h3 class="sub2">Aufbau des Methodennamens</h3>
     <div class="tree">
       <span class="t-root">findBy</span><span class="t-node">Title</span><span class="t-leaf">Containing</span><span class="t-note">OrderBy</span>ImdbRatingDesc<br>
       │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
       <span class="t-root">Aktion</span>&nbsp;&nbsp;<span class="t-node">Eigenschaft</span>&nbsp;<span class="t-leaf">Bedingung</span>&nbsp;&nbsp;&nbsp;<span class="t-note">Sortierung</span>
     </div>
 
-    <h3 class="sub2">Aktionen</h3>
-    <table>
-      <tr><th>Aktion</th><th>Bedeutung</th></tr>
-      <tr><td><code>findBy…</code></td><td>SELECT-Abfrage mit Bedingung → gibt Liste zurück</td></tr>
-      <tr><td><code>countBy…</code></td><td>Anzahl der Treffer zurückgeben</td></tr>
-      <tr><td><code>deleteBy…</code></td><td>DELETE mit Bedingung</td></tr>
-      <tr><td><code>existsBy…</code></td><td>Gibt Boolean zurück (existiert ein Treffer?)</td></tr>
-    </table>
-
-    <h3 class="sub2">Bedingungen (Keywords)</h3>
     <table>
       <tr><th>Keyword</th><th>SQL-Entsprechung</th><th>Beispiel</th></tr>
       <tr><td><code>Containing</code></td><td>LIKE '%x%'</td><td><code>findByTitleContaining(String s)</code></td></tr>
@@ -760,35 +686,25 @@ public interface MovieRepository extends JpaRepository&lt;Movie, Long&gt; {
       <tr><td><code>After</code></td><td>&gt; (Datum)</td><td><code>findByPremiereDateAfter(LocalDate d)</code></td></tr>
       <tr><td><code>Before</code></td><td>&lt; (Datum)</td><td><code>findByPremiereDateBefore(LocalDate d)</code></td></tr>
       <tr><td><code>Like</code></td><td>LIKE (manuelles Wildcard)</td><td><code>findByTitleLike(String s)</code></td></tr>
-      <tr><td><code>OrderBy</code></td><td>ORDER BY</td><td><code>findByTitleOrderByImdbRatingDesc(String s)</code></td></tr>
+      <tr><td><code>OrderBy…Desc</code></td><td>ORDER BY … DESC</td><td><code>findByTitleOrderByImdbRatingDesc(String s)</code></td></tr>
     </table>
 
-    <pre><code class="language-java">// Beispiele aus dem Projekt (Aufgabe 2 & 3)
-// Spring generiert für diese Signaturen automatisch die SQL-Abfragen!
-List&lt;Movie&gt; findByTitleContaining(String substring);
+    <pre><code class="language-java">// Beispiele aus dem Projekt – Spring implementiert diese automatisch!
+List<Movie> findByTitleContaining(String substring);
 // → SELECT * FROM movie WHERE title LIKE '%substring%'
 
-List&lt;Movie&gt; findByImdbRatingGreaterThan(double rating);
+List<Movie> findByImdbRatingGreaterThan(double rating);
 // → SELECT * FROM movie WHERE imdb_rating > rating
 
-List&lt;Movie&gt; findByPremiereDateAfter(LocalDate reference);
+List<Movie> findByPremiereDateAfter(LocalDate reference);
 // → SELECT * FROM movie WHERE premiere_date > reference</code></pre>
 
     <!-- JPQL -->
-    <h2 class="sub" id="jpql">JPQL &amp; @Query-Annotation</h2>
+    <h2 class="sub" id="jpql">JPQL &amp; @Query</h2>
 
     <div class="einfach">
-      <p>Wenn der Methodenname zu komplex wird (z. B. JOINs über mehrere Tabellen), schreibst du die Abfrage manuell mit <code>@Query</code>.</p>
-      <p>JPQL sieht aus wie SQL, aber: statt Tabellenname schreibst du den <strong>Klassennamen</strong>, statt Spaltenname das <strong>Attribut</strong>. Beispiel: statt <code>SELECT * FROM movie</code> schreibst du <code>SELECT m FROM Movie m</code>.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Was ist JPQL?</div>
-      JPQL (Java Persistence Query Language) ist eine SQL-ähnliche Sprache, die aber auf dem <strong>Objektgraphen</strong> operiert – d. h. Klassenamen und Attribute statt Tabellennamen und Spalten.
-    </div>
-
-    <div class="box box-yellow">
-      <strong>Wichtig:</strong> JPQL-Queries werden beim Spring Boot Start validiert. Syntaxfehler fallen sofort beim Start auf – nicht erst zur Laufzeit.
+      <p>Wenn der Methodenname zu komplex wird (z. B. JOINs), schreibst du die Abfrage manuell mit <code>@Query</code>.</p>
+      <p>JPQL sieht aus wie SQL, aber: statt Tabellenname schreibst du den <strong>Klassennamen</strong>, statt Spaltenname das <strong>Attribut</strong>. Statt <code>SELECT * FROM movie</code> schreibst du <code>SELECT m FROM Movie m</code>.</p>
     </div>
 
     <table>
@@ -797,169 +713,137 @@ List&lt;Movie&gt; findByPremiereDateAfter(LocalDate reference);
       <tr><td><span class="ann ann-orange">@Param("name")</span></td><td>Bindet einen Methodenparameter an einen benannten JPQL-Parameter (<code>:name</code>)</td></tr>
     </table>
 
-    <pre><code class="language-java">// Einfache JPQL-Abfrage (Aufgabe 2)
-// "Movie" = Klassenname, "m" = Alias, "m.title" = Attribut (nicht Spaltenname!)
+    <div class="box box-yellow">
+      <strong>Wichtig:</strong> JPQL-Queries werden beim Spring Boot Start validiert. Syntaxfehler fallen sofort auf – nicht erst zur Laufzeit.
+    </div>
+
+    <pre><code class="language-java">// Einfache JPQL – "Movie" = Klassenname, "m" = Alias, "m.title" = Attribut
 @Query("SELECT m FROM Movie m WHERE m.title = :param1")
-List&lt;Movie&gt; findAllMoviesByTitle(@Param("param1") String title);
+List<Movie> findAllMoviesByTitle(@Param("param1") String title);
 
-// LIKE-Abfrage mit Wildcard (% = beliebige Zeichen)
+// LIKE mit Wildcard (% = beliebige Zeichen)
 @Query("SELECT m FROM Movie m WHERE m.title like %:param1%")
-List&lt;Movie&gt; findAllMoviesBelongingToSeries(@Param("param1") String series);
+List<Movie> findAllMoviesBelongingToSeries(@Param("param1") String series);
 
-// JOIN über eine Collection (ManyToMany)
-// "JOIN m.involvedMovieCast c" = verknüpfe mit der Cast-Liste, Alias c
+// JOIN über Collection (ManyToMany) – "JOIN m.involvedMovieCast c"
 @Query("SELECT m FROM Movie m JOIN m.involvedMovieCast c WHERE c.surname = :param1")
-List&lt;Movie&gt; findAllMoviesWithCastSurname(@Param("param1") String castSurname);
+List<Movie> findAllMoviesWithCastSurname(@Param("param1") String castSurname);
 
-// Verschachtelter Attributzugriff über Objekt-Referenz (kein JOIN nötig)
-// m.soundtrack.author_surname = über das soundtrack-Attribut auf dessen Felder zugreifen
+// Verschachtelter Attributzugriff (kein JOIN nötig)
 @Query("SELECT m FROM Movie m WHERE m.soundtrack.author_surname = :param1")
-List&lt;Movie&gt; findAllMoviesWithSoundtrackAuthor(@Param("param1") String surname);
+List<Movie> findAllMoviesWithSoundtrackAuthor(@Param("param1") String surname);
 
 // Kollektionsgröße mit size()
 @Query("SELECT m FROM Movie m WHERE size(m.involvedMovieCast) > :param1")
-List&lt;Movie&gt; findAllMoviesWithMoreThanGivenCasts(@Param("param1") Integer num);
+List<Movie> findAllMoviesWithMoreThanGivenCasts(@Param("param1") Integer num);
 
-// JOIN über Award-Kollektion (OneToMany)
+// JOIN über Award-Kollektion
 @Query("SELECT m FROM Movie m JOIN m.awards a WHERE a.academy = :param1")
-List&lt;Movie&gt; findAllMoviesWithAcademy(@Param("param1") String academy);
+List<Movie> findAllMoviesWithAcademy(@Param("param1") String academy);
 
-// Mehrere JOINs und Bedingungen kombinieren
+// Mehrere JOINs kombiniert
 @Query("SELECT m FROM Movie m JOIN m.involvedMovieCast c JOIN m.awards a " +
        "WHERE c.surname = :param1 AND a.academy = :param2")
-List&lt;Movie&gt; myMoviesByCastAndAward(@Param("param1") String surname,
-                                    @Param("param2") String academy);
-
-// Komplexe Abfrage: Award + Datum-Bereich + Kollektionsgröße
-@Query("SELECT m FROM Movie m JOIN m.awards a WHERE " +
-       "a.category = :param1 AND size(m.involvedMovieCast) > 0 AND " +
-       "m.soundtrack.releaseDate > :param2 AND m.soundtrack.releaseDate < :param3")
-List&lt;Movie&gt; findMoviesByCastSizeAndSoundtrack(@Param("param1") String category,
-                                               @Param("param2") LocalDate minDate,
-                                               @Param("param3") LocalDate maxDate);</code></pre>
+List<Movie> myMoviesByCastAndAward(@Param("param1") String surname,
+                                    @Param("param2") String academy);</code></pre>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════
        3. BEZIEHUNGEN
-  ═══════════════════════════════════════════════════════════════ -->
+  ══════════════════════════════════════════════════ -->
   <section id="relationships">
     <h1 class="sec">3 · JPA-Beziehungstypen</h1>
 
     <div class="einfach">
       <p>Entities stehen in Beziehungen. Das entspricht dem echten Leben: Ein Regisseur dreht mehrere Filme, ein Film hat viele Schauspieler, ein Film hat genau einen Soundtrack.</p>
-      <p>JPA bildet diese Beziehungen mit Annotationen ab. In der Datenbank werden sie zu Foreign Keys oder Zwischentabellen.</p>
-      <p><strong>Faustregel:</strong> Die Seite die den <strong>Foreign Key</strong> in der Tabelle hat, ist der <strong>Besitzer</strong> der Beziehung.</p>
+      <p><strong>Faustregel:</strong> Die Seite die den <strong>Foreign Key</strong> in der Tabelle hat, ist der <strong>Besitzer</strong> der Beziehung. Die andere Seite hat <code>mappedBy</code>.</p>
     </div>
 
     <table>
       <tr><th>Annotation</th><th>Kardinalität</th><th>Beispiel</th><th>DB-Umsetzung</th></tr>
       <tr><td><span class="ann ann-orange">@ManyToOne</span></td><td>N:1</td><td>Viele Movies → ein Director</td><td>Foreign Key in Movie-Tabelle</td></tr>
-      <tr><td><span class="ann ann-orange">@OneToMany</span></td><td>1:N</td><td>Ein Director → viele Movies</td><td>Gegenseite zu @ManyToOne (kein extra FK)</td></tr>
+      <tr><td><span class="ann ann-orange">@OneToMany</span></td><td>1:N</td><td>Ein Director → viele Movies</td><td>Gegenseite (kein eigener FK)</td></tr>
       <tr><td><span class="ann ann-orange">@ManyToMany</span></td><td>M:N</td><td>Viele Movies ↔ viele Schauspieler</td><td>Zwischentabelle (Join Table)</td></tr>
       <tr><td><span class="ann ann-orange">@OneToOne</span></td><td>1:1</td><td>Ein Movie ↔ ein Soundtrack</td><td>Foreign Key auf einer Seite</td></tr>
     </table>
 
-    <!-- 1:N -->
     <h2 class="sub" id="onetomany">@ManyToOne / @OneToMany – 1:N-Beziehung</h2>
 
     <div class="einfach">
       <p>Ein Director hat viele Movies. Jeder Movie gehört zu einem Director.<br>
-      In der Datenbank: Die MOVIE-Tabelle bekommt eine Spalte <code>director_id</code> (Foreign Key).</p>
-      <p>Der Movie ist der "Besitzer" weil er den Foreign Key hat → <code>@ManyToOne</code> beim Movie.<br>
-      Der Director sieht seine Filme über die Rückseite → <code>@OneToMany(mappedBy = "director")</code> beim Director.</p>
+      In der DB: Die MOVIE-Tabelle bekommt eine Spalte <code>director_id</code> (Foreign Key) → Movie ist Besitzer → <code>@ManyToOne</code> beim Movie.<br>
+      Der Director sieht seine Filme über die Rückseite → <code>@OneToMany(mappedBy = "director")</code>.</p>
     </div>
 
-    <div class="card">
-      <strong>Beispiel:</strong> Ein Director hat viele Movies. Jeder Movie hat genau einen Director.<br>
-      → Der Movie ist der „Besitzer" der Beziehung (hat den Foreign Key <code>director_id</code>).
-    </div>
-
-    <pre><code class="language-java">// Movie-Entity (viele Movies → ein Director)  → "@ManyToOne" = Movie-Perspektive: "ich bin Viele"
+    <pre><code class="language-java">// Movie-Entity: "viele Movies → ein Director" → @ManyToOne (Movie-Perspektive: "ich bin Viele")
 @ManyToOne(cascade = CascadeType.ALL)
-@JoinColumn(name = "director_id", nullable = true)  // erzeugt Spalte "director_id" in MOVIE-Tabelle
+@JoinColumn(name = "director_id", nullable = true)  // erzeugt Spalte "director_id" in MOVIE
 private Director director;
 
-// Director-Entity (ein Director → viele Movies)  → "@OneToMany" = Director-Perspektive: "ich bin Einer"
+// Director-Entity: Rückseite – kein eigener FK, verweist mit mappedBy auf Movie.director
 @OneToMany(mappedBy = "director", cascade = CascadeType.ALL)
-// mappedBy = Name des Felds auf der Besitzer-Seite (Movie.director)
-// → diese Seite hat KEINEN eigenen FK, sie verweist auf die andere Seite
-private List&lt;Movie&gt; movies;</code></pre>
+private List<Movie> movies;</code></pre>
 
     <div class="box box-blue">
-      <strong>mappedBy erklärt:</strong> <code>mappedBy = "director"</code> bedeutet: "Die Beziehung ist bereits auf der anderen Seite definiert, im Feld namens <code>director</code>. Ich (Director) bin die nicht-besitzende Seite." Dadurch weiß JPA, dass es keinen zweiten Foreign Key anlegen soll.
+      <strong>mappedBy erklärt:</strong> <code>mappedBy = "director"</code> bedeutet: "Die Beziehung ist bereits auf der anderen Seite definiert, im Feld <code>director</code> der Movie-Klasse. Ich (Director) bin die nicht-besitzende Seite – JPA legt keinen zweiten FK an."
     </div>
 
-    <!-- M:N -->
     <h2 class="sub" id="manytomany">@ManyToMany – M:N-Beziehung</h2>
 
     <div class="einfach">
       <p>Ein Film hat viele Schauspieler, ein Schauspieler spielt in vielen Filmen.<br>
-      In der Datenbank braucht man dafür eine <strong>Zwischentabelle</strong>, die einfach nur zwei Foreign Keys enthält: <code>movie_id</code> und <code>cast_id</code>.</p>
-      <p>Spring legt diese Tabelle automatisch an wenn du <code>@JoinTable</code> definierst.</p>
+      In der DB braucht man eine <strong>Zwischentabelle</strong> mit zwei Foreign Keys: <code>movie_id</code> und <code>cast_id</code>. Spring legt sie automatisch an wenn du <code>@JoinTable</code> definierst.</p>
     </div>
 
-    <div class="card">
-      <strong>Beispiel:</strong> Viele Movies haben viele Schauspieler (MovieCast). Ein Schauspieler wirkt in mehreren Movies mit.<br>
-      → Datenbank benötigt eine <strong>Zwischentabelle</strong> (<code>movie_moviecast</code>).
-    </div>
-
-    <pre><code class="language-java">// Movie-Entity (Besitzer-Seite, definiert die Zwischentabelle mit @JoinTable)
+    <pre><code class="language-java">// Movie-Entity: Besitzer-Seite – definiert die Zwischentabelle mit @JoinTable
 @ManyToMany(cascade = CascadeType.ALL)
 @JoinTable(
     name = "movie_moviecast",                  // Name der Zwischentabelle in der DB
     joinColumns = {
-        @JoinColumn(name = "movie_id",         // FK-Spalte für Movie
-                    referencedColumnName = "id")
+        @JoinColumn(name = "movie_id", referencedColumnName = "id")
     },
     inverseJoinColumns = {
-        @JoinColumn(name = "cast_id",          // FK-Spalte für MovieCast
-                    referencedColumnName = "id")
+        @JoinColumn(name = "cast_id",  referencedColumnName = "id")
     }
 )
-private List&lt;MovieCast&gt; involvedMovieCast;
+private List<MovieCast> involvedMovieCast;
 
-// MovieCast-Entity (nicht-besitzende Seite, verweist mit mappedBy auf die andere Seite)
+// MovieCast-Entity: nicht-besitzende Seite
 @ManyToMany(mappedBy = "involvedMovieCast", cascade = CascadeType.PERSIST)
-private List&lt;Movie&gt; participatedMovies;</code></pre>
+private List<Movie> participatedMovies;</code></pre>
 
     <div class="box box-yellow">
-      <strong>Wichtig @ManyToMany:</strong> Referenz muss immer von der <em>Besitzer-Seite</em> gesetzt werden → <code>movie.getInvolvedMovieCast().add(castMember)</code>. Nur dann wird die Zwischentabelle korrekt befüllt.
+      <strong>Wichtig:</strong> Referenz immer von der Besitzer-Seite setzen → <code>movie.getInvolvedMovieCast().add(castMember)</code>. Nur dann wird die Zwischentabelle korrekt befüllt.
     </div>
 
-    <!-- 1:1 -->
     <h2 class="sub" id="onetoone">@OneToOne – 1:1-Beziehung</h2>
 
     <div class="einfach">
       <p>Ein Film hat genau einen Soundtrack, ein Soundtrack gehört zu genau einem Film.<br>
-      Hier hat der Soundtrack den Foreign Key (<code>movie_id</code>) in seiner Tabelle → Soundtrack ist Besitzer.</p>
-      <p>Das ist wie bei einer Ehe: Beide Seiten verweisen aufeinander, aber einer trägt den Eintrag im Register (= FK).</p>
+      Hier hat der <strong>Soundtrack</strong> den Foreign Key (<code>movie_id</code>) → Soundtrack ist Besitzer.<br>
+      Typische Falle: beide Seiten müssen gesetzt werden bevor man speichert!</p>
     </div>
 
-    <div class="card">
-      <strong>Beispiel:</strong> Jeder Movie hat genau einen Soundtrack. Jeder Soundtrack gehört zu genau einem Movie.<br>
-      → Soundtrack besitzt die Beziehung (hat den Foreign Key <code>movie_id</code>).
-    </div>
-
-    <pre><code class="language-java">// Soundtrack-Entity (Besitzer-Seite: hat den FK "movie_id" in seiner Tabelle)
+    <pre><code class="language-java">// Soundtrack: Besitzer-Seite – hat FK "movie_id" in seiner Tabelle
 @OneToOne(cascade = CascadeType.ALL)
-@JoinColumn(name = "movie_id")          // erzeugt Spalte "movie_id" in SOUNDTRACK-Tabelle
+@JoinColumn(name = "movie_id")
 private Movie movie;
 
-// Movie-Entity (nicht-besitzende Seite: kein FK, nur Rückreferenz)
+// Movie: nicht-besitzende Seite – kein FK, nur Rückreferenz
 @OneToOne(mappedBy = "movie", cascade = CascadeType.ALL)
 private Soundtrack soundtrack;</code></pre>
 
     <div class="box box-red">
-      <strong>Typische Falle @OneToOne:</strong> Beide Seiten müssen gesetzt werden, damit alles korrekt persistiert und im Speicher stimmt:
-      <pre><code class="language-java">soundtrack.setMovie(movie);         // Besitzer-Seite setzen (Pflicht für DB!)
-movie.setSoundtrack(soundtrack);    // Gegenseite setzen (für Java-Objekt-Navigation)
+      <strong>Typische Falle @OneToOne:</strong> Beide Seiten müssen gesetzt werden!
+      <pre><code class="language-java">soundtrack.setMovie(movie);         // Besitzer-Seite (Pflicht für DB!)
+movie.setSoundtrack(soundtrack);    // Gegenseite (für Java-Navigation)
 movieRepository.save(movie);        // Cascade speichert Soundtrack automatisch</code></pre>
     </div>
 
     <h3 class="sub2">Weitere Beziehung: Movie ↔ Award (1:N)</h3>
     <pre><code class="language-java">// Movie-Entity (nicht-besitzende Seite, EAGER weil immer mitgeladen)
 @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-private List&lt;Award&gt; awards;
+private List<Award> awards;
 
 // Award-Entity (Besitzer-Seite: hat FK "movie_id")
 @ManyToOne(cascade = CascadeType.ALL)
@@ -967,107 +851,91 @@ private List&lt;Award&gt; awards;
 private Movie movie;</code></pre>
 
     <!-- Cascade -->
-    <h2 class="sub" id="cascade">Cascading (Kaskadierende Operationen)</h2>
+    <h2 class="sub" id="cascade">Cascading</h2>
 
     <div class="einfach">
-      <p>Cascading bestimmt: wenn ich etwas mit Objekt A mache, was passiert dann automatisch mit Objekt B das mit A verknüpft ist?</p>
-      <p>Mit <code>CascadeType.ALL</code> beim Movie→Director: wenn du einen Movie speicherst, wird der Director automatisch mitgespeichert. Du musst den Director nicht separat speichern!</p>
-      <p>Ohne Cascade: du müsstest Director und Movie separat speichern → mehr Code, mehr Fehler.</p>
-    </div>
-
-    <div class="card">
-      Cascading definiert, wie sich Operationen an einer Entity auf referenzierte Entities auswirken.
+      <p>Cascade bestimmt: wenn ich etwas mit Objekt A mache, was passiert automatisch mit Objekt B?</p>
+      <p>Mit <code>CascadeType.ALL</code> beim Movie→Director: wenn du einen Movie speicherst, wird der Director automatisch mitgespeichert. Du musst ihn nicht separat speichern!</p>
     </div>
 
     <table>
       <tr><th>CascadeType</th><th>Bedeutung</th></tr>
-      <tr><td><code>CascadeType.PERSIST</code></td><td>Wenn Owner gespeichert wird → referenzierte Entity wird auch gespeichert</td></tr>
-      <tr><td><code>CascadeType.REMOVE</code></td><td>Wenn Owner gelöscht wird → referenzierte Entity wird auch gelöscht</td></tr>
-      <tr><td><code>CascadeType.MERGE</code></td><td>Wenn Owner gemergt (aktualisiert) wird → referenzierte Entity auch</td></tr>
-      <tr><td><code>CascadeType.REFRESH</code></td><td>Wenn Owner aus DB neu geladen wird → referenzierte Entity auch</td></tr>
-      <tr><td><code>CascadeType.DETACH</code></td><td>Wenn Owner vom Context getrennt wird → referenzierte Entity auch</td></tr>
-      <tr><td><code>CascadeType.ALL</code></td><td>Alle obigen Operationen kaskadieren (PERSIST + REMOVE + MERGE + REFRESH + DETACH)</td></tr>
+      <tr><td><code>PERSIST</code></td><td>Wenn Owner gespeichert wird → referenzierte Entity wird auch gespeichert</td></tr>
+      <tr><td><code>REMOVE</code></td><td>Wenn Owner gelöscht wird → referenzierte Entity wird auch gelöscht</td></tr>
+      <tr><td><code>MERGE</code></td><td>Wenn Owner gemergt wird → referenzierte Entity auch</td></tr>
+      <tr><td><code>REFRESH</code></td><td>Wenn Owner neu geladen wird → referenzierte Entity auch</td></tr>
+      <tr><td><code>DETACH</code></td><td>Wenn Owner vom Context getrennt wird → referenzierte Entity auch</td></tr>
+      <tr><td><code>ALL</code></td><td>Alle obigen Operationen kaskadieren</td></tr>
     </table>
 
     <div class="box box-blue">
-      <strong>Cascade-Strategie im Projekt:</strong><br>
-      <code>CascadeType.ALL</code> bei Movie→Director: Wenn Movie gespeichert wird, wird Director automatisch mitgespeichert.<br>
-      <code>CascadeType.PERSIST</code> (nicht ALL) bei MovieCast→Movies: Cast wird gespeichert, aber Löschen von Cast löscht <em>nicht</em> automatisch die Movies.
+      <strong>Im Projekt:</strong> <code>CascadeType.ALL</code> bei Movie→Director: Movie speichern = Director automatisch mitgespeichert.<br>
+      <code>CascadeType.PERSIST</code> (nicht ALL) bei MovieCast: Cast wird gespeichert, aber Löschen von Cast löscht <em>nicht</em> automatisch Movies.
     </div>
 
     <!-- Loading -->
     <h2 class="sub" id="loading">Lazy Loading vs. Eager Loading</h2>
 
     <div class="einfach">
-      <p><strong>Lazy</strong> = faul. Spring lädt die verknüpften Objekte erst wenn du wirklich drauf zugreifst (<code>movie.getInvolvedMovieCast()</code> aufrufen). Solange du nicht drauf zugreifst, ist die Liste leer.</p>
-      <p><strong>Eager</strong> = eifrig. Spring lädt alles sofort beim ersten Laden des Movie-Objekts mit – auch wenn du die Cast-Liste vielleicht gar nicht brauchst.</p>
-      <p><strong>Problem Lazy:</strong> Wenn du nach dem Schließen der DB-Session (außerhalb <code>@Transactional</code>) auf eine lazy-geladene Liste zugreifst, gibt es eine <code>LazyInitializationException</code>. Lösung: <code>@Transactional</code> auf die Methode.</p>
+      <p><strong>Lazy</strong> = faul. Spring lädt verknüpfte Objekte erst wenn du wirklich drauf zugreifst. Solange du nicht zugreifst, ist die Liste ein Platzhalter.</p>
+      <p><strong>Eager</strong> = eifrig. Spring lädt alles sofort beim Laden des Haupt-Objekts – auch wenn du die Liste vielleicht gar nicht brauchst.</p>
+      <p><strong>Problem Lazy:</strong> Außerhalb einer Transaktion (<code>@Transactional</code>) auf lazy-geladene Liste zugreifen → <code>LazyInitializationException</code>!</p>
     </div>
 
     <div class="card-grid">
-      <div class="card" style="border-top:3px solid var(--yellow)">
-        <div class="card-title" style="color:var(--yellow)">Eager Loading</div>
-        Alle referenzierten Objekte werden <strong>sofort</strong> beim Laden der Entity aus der DB geladen.<br><br>
-        <strong>Problem:</strong> Kann bei bidirektionalen Beziehungen zu enormen Performance-Problemen führen (zu viele Daten auf einmal).<br><br>
+      <div class="card" style="border-top:3px solid var(--ctp-yellow)">
+        <div class="card-title" style="color:var(--ctp-yellow)">Eager Loading</div>
+        Alle referenzierten Objekte werden <strong>sofort</strong> beim Laden aus der DB mitgeladen.<br><br>
+        <strong>Problem:</strong> Kann bei tiefen Beziehungen enorme Performance-Probleme verursachen.<br><br>
         <strong>Default bei:</strong> <code>@ManyToOne</code>, <code>@OneToOne</code>
       </div>
-      <div class="card" style="border-top:3px solid var(--green)">
-        <div class="card-title" style="color:var(--green)">Lazy Loading ✓ (empfohlen)</div>
+      <div class="card" style="border-top:3px solid var(--ctp-green)">
+        <div class="card-title" style="color:var(--ctp-green)">Lazy Loading ✓ (empfohlen)</div>
         Referenzierte Objekte werden <strong>erst beim Zugriff</strong> auf das Attribut geladen.<br><br>
         <strong>Empfohlen</strong> für Collections (Listen).<br><br>
         <strong>Default bei:</strong> <code>@OneToMany</code>, <code>@ManyToMany</code><br><br>
-        <strong>Achtung:</strong> Außerhalb <code>@Transactional</code> → <code>LazyInitializationException</code>!
+        <strong>Achtung:</strong> Außerhalb <code>@Transactional</code> → Exception!
       </div>
     </div>
 
-    <pre><code class="language-java">// Explizit Eager-Loading setzen (alles immer sofort laden)
+    <pre><code class="language-java">// Explizit Eager setzen
 @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-private List&lt;Award&gt; awards;
+private List<Award> awards;
 
-// Explizit Lazy-Loading (ist Standard bei Collections, kann weggelassen werden)
+// Explizit Lazy (Standard bei Collections, kann weggelassen werden)
 @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-private List&lt;Movie&gt; participatedMovies;</code></pre>
+private List<Movie> participatedMovies;</code></pre>
 
     <!-- Bidirectional -->
     <h2 class="sub" id="bidirectional">Bidirektionale Beziehungen</h2>
 
     <div class="einfach">
       <p>Bei einer bidirektionalen Beziehung kann man von beiden Seiten navigieren: <code>movie.getDirector()</code> und <code>director.getMovies()</code>.</p>
-      <p>Aber: JPA braucht eine klare Aussage, wer den Foreign Key besitzt. Das ist immer die Seite <strong>ohne</strong> <code>mappedBy</code>. Diese Seite muss immer gesetzt werden – sonst landet nichts in der DB.</p>
+      <p>Aber: JPA braucht eine klare Aussage, wer den Foreign Key besitzt (= Seite <strong>ohne</strong> <code>mappedBy</code>). Diese Seite muss immer gesetzt werden – sonst landet nichts in der DB.</p>
     </div>
 
-    <div class="card">
-      Bei bidirektionalen Beziehungen müssen <strong>beide Seiten gepflegt</strong> werden:
-      <ol style="margin-top:8px">
-        <li>Die <strong>Besitzer-Seite</strong> (ohne <code>mappedBy</code>) trägt den Foreign Key und steuert die DB-Persistenz</li>
-        <li>Beim Setzen der Referenz im Code muss immer die Besitzer-Seite gesetzt werden</li>
-        <li>Für korrekte bidirektionale Navigation im Code sollte auch die andere Seite gesetzt werden</li>
-      </ol>
-    </div>
-
-    <pre><code class="language-java">// Korrekte bidirektionale Beziehungspflege
-Director director = new Director("Christopher", "Nolan");
+    <pre><code class="language-java">Director director = new Director("Christopher", "Nolan");
 Movie movie = new Movie("Interstellar");
 
-// 1. Besitzer-Seite setzen (Movie hat den FK) → Pflicht für die DB!
+// 1. Besitzer-Seite setzen (Movie hat den FK) → PFLICHT für die DB!
 movie.setDirector(director);
 
-// 2. Gegenseite setzen → Pflicht für korrekte Java-Navigation (director.getMovies() liefert sonst leer)
+// 2. Gegenseite setzen → für korrekte Java-Navigation (sonst liefert director.getMovies() leer)
 director.getMovies().add(movie);
 
-// 3. Nur Movie speichern – Director wird durch CascadeType.ALL automatisch mitgespeichert!
+// 3. Nur Movie speichern – Director durch CascadeType.ALL automatisch mitgespeichert
 movieRepository.save(movie);
-// KEIN direktory.save() nötig</code></pre>
+// KEIN director.save() nötig!</code></pre>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════
        4. TRANSAKTIONEN
-  ═══════════════════════════════════════════════════════════════ -->
+  ══════════════════════════════════════════════════ -->
   <section id="transactions">
     <h1 class="sec">4 · Transaktionen</h1>
 
     <div class="einfach">
-      <p>Eine Transaktion ist wie ein "Alles oder Nichts"-Versprechen an die Datenbank. Stell dir vor du überweist Geld: Konto A wird belastet UND Konto B wird gutgeschrieben. Wenn der zweite Schritt fehlschlägt, muss auch der erste rückgängig gemacht werden (Rollback). Genau das macht eine Transaktion.</p>
+      <p>Eine Transaktion ist ein "Alles oder Nichts"-Versprechen. Beispiel Banküberweisung: Konto A belastet UND Konto B gutgeschrieben. Wenn Schritt 2 fehlschlägt, muss Schritt 1 rückgängig gemacht werden (Rollback). Genau das macht eine Transaktion.</p>
     </div>
 
     <div class="card">
@@ -1075,55 +943,47 @@ movieRepository.save(movie);
       Eine Transaktion fasst zusammengehörige Operationen zu einer <strong>Einheit</strong> zusammen. Sie implementiert das <strong>Alles-oder-Nichts-Prinzip</strong>: Entweder alle Operationen gelingen, oder bei einem Fehler wird alles rückgängig gemacht (Rollback).
     </div>
 
-    <!-- ACID -->
     <h2 class="sub" id="acid">ACID-Eigenschaften</h2>
 
-    <div class="einfach">
-      <p>ACID beschreibt die vier Garantien die eine Transaktion geben muss. Lerne das Akronym: <strong>A</strong>tomarität, <strong>C</strong>onsistenz (Konsistenz), <strong>I</strong>solation, <strong>D</strong>urability (Dauerhaftigkeit).</p>
-    </div>
-
     <div class="card-grid">
-      <div class="card" style="border-top:3px solid var(--accent)">
-        <div class="card-title" style="color:var(--accent)">A – Atomicity (Atomarität)</div>
-        Eine Transaktion ist nur erfolgreich, wenn <strong>alle</strong> Operationen erfolgreich sind.<br><br>
-        Bei Fehler → automatischer <strong>Rollback</strong> zum Ausgangszustand.<br><br>
+      <div class="card" style="border-top:3px solid var(--ctp-blue)">
+        <div class="card-title" style="color:var(--ctp-blue)">A – Atomicity (Atomarität)</div>
+        Transaktion ist nur erfolgreich wenn <strong>alle</strong> Operationen erfolgreich sind.<br>
+        Bei Fehler → <strong>Rollback</strong> zum Ausgangszustand.<br><br>
         <em>Einfach: Entweder alles klappt, oder gar nichts ändert sich.</em>
       </div>
-      <div class="card" style="border-top:3px solid var(--green)">
-        <div class="card-title" style="color:var(--green)">C – Consistency (Konsistenz)</div>
-        Die Transaktion beginnt und endet in einem <strong>konsistenten DB-Zustand</strong>.<br><br>
-        Alle Constraints/Bedingungen bleiben erhalten (z.B. NOT NULL, Foreign Keys).<br><br>
-        <em>Einfach: Die Datenbank bleibt immer in einem gültigen Zustand.</em>
+      <div class="card" style="border-top:3px solid var(--ctp-green)">
+        <div class="card-title" style="color:var(--ctp-green)">C – Consistency (Konsistenz)</div>
+        Transaktion beginnt und endet in einem <strong>konsistenten DB-Zustand</strong>.<br>
+        Alle Constraints bleiben erhalten (NOT NULL, Foreign Keys …).<br><br>
+        <em>Einfach: Die DB bleibt immer in einem gültigen Zustand.</em>
       </div>
-      <div class="card" style="border-top:3px solid var(--yellow)">
-        <div class="card-title" style="color:var(--yellow)">I – Isolation</div>
-        Transaktion läuft <strong>unabhängig</strong> von parallel laufenden Transaktionen.<br><br>
-        Keine Seiteneffekte durch parallele Transaktionen.<br><br>
-        <em>Einfach: Zwei gleichzeitige Transaktionen stören sich nicht gegenseitig.</em>
+      <div class="card" style="border-top:3px solid var(--ctp-yellow)">
+        <div class="card-title" style="color:var(--ctp-yellow)">I – Isolation</div>
+        Transaktion läuft <strong>unabhängig</strong> von parallel laufenden Transaktionen.<br>
+        Keine Seiteneffekte durch Parallelität.<br><br>
+        <em>Einfach: Zwei gleichzeitige Transaktionen stören sich nicht.</em>
       </div>
-      <div class="card" style="border-top:3px solid var(--orange)">
-        <div class="card-title" style="color:var(--orange)">D – Durability (Dauerhaftigkeit)</div>
-        Ergebnisse einer erfolgreichen Transaktion sind <strong>permanent gespeichert</strong> und überleben Server-Abstürze.<br><br>
-        <em>Einfach: Was einmal committed ist, bleibt auch nach einem Stromausfall erhalten.</em>
+      <div class="card" style="border-top:3px solid var(--ctp-peach)">
+        <div class="card-title" style="color:var(--ctp-peach)">D – Durability (Dauerhaftigkeit)</div>
+        Ergebnisse einer erfolgreichen Transaktion sind <strong>permanent</strong> gespeichert und überleben Server-Abstürze.<br><br>
+        <em>Einfach: Was committed ist, bleibt nach Stromausfall erhalten.</em>
       </div>
     </div>
 
-    <!-- @Transactional -->
-    <h2 class="sub" id="transactional">@Transactional Annotation</h2>
+    <h2 class="sub" id="transactional">@Transactional</h2>
 
     <div class="einfach">
-      <p><code>@Transactional</code> auf einer Methode bedeutet: Spring öffnet vor dem Methodenaufruf eine DB-Session, und schließt sie (mit Commit) danach. Innerhalb der Methode:<br>
-      1. Du kannst lazy-geladene Collections problemlos aufrufen (Session ist noch offen).<br>
-      2. Wenn du ein Objekt änderst (<code>setTitle(...)</code>), speichert Spring die Änderung automatisch am Ende – kein <code>save()</code> nötig! (= Dirty Checking)</p>
-    </div>
-
-    <div class="card">
-      <span class="ann ann-purple">@Transactional</span> markiert eine Methode oder Klasse als transaktional. Spring öffnet automatisch einen Transaktionskontext vor der Methode und committed/rollt zurück nach der Methode.
+      <p><code>@Transactional</code> auf einer Methode bedeutet: Spring öffnet vor dem Aufruf eine DB-Session und schließt sie (mit Commit) danach. Dadurch:</p>
+      <ul>
+        <li>Lazy-geladene Collections können problemlos aufgerufen werden (Session ist noch offen)</li>
+        <li>Wenn du ein Objekt änderst (<code>setTitle(...)</code>), speichert Spring die Änderung automatisch – kein <code>save()</code> nötig! (= <strong>Dirty Checking</strong>)</li>
+      </ul>
     </div>
 
     <table>
       <tr><th>Anwendungsort</th><th>Wirkung</th></tr>
-      <tr><td>Auf <strong>Methode</strong></td><td>Nur diese Methode läuft transaktional (empfohlen – gezielter Einsatz)</td></tr>
+      <tr><td>Auf <strong>Methode</strong></td><td>Nur diese Methode läuft transaktional (empfohlen)</td></tr>
       <tr><td>Auf <strong>Klasse</strong></td><td>Alle Methoden der Klasse laufen transaktional</td></tr>
     </table>
 
@@ -1132,19 +992,17 @@ public class MovieServiceImpl implements MovieService {
 
     private MovieRepository movieRepository;
 
-    // Constructor Injection
     public MovieServiceImpl(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
     }
 
     @Transactional  // Session bleibt offen → Lazy-Loading klappt!
-    public List&lt;String&gt; getCastOfMovie(String movieTitle) {
-        List&lt;String&gt; result = new LinkedList&lt;&gt;();
-        List&lt;Movie&gt; tmp = this.movieRepository.findByTitleContaining(movieTitle);
+    public List<String> getCastOfMovie(String movieTitle) {
+        List<String> result = new LinkedList<>();
+        List<Movie> tmp = this.movieRepository.findByTitleContaining(movieTitle);
         if (tmp.size() == 1) {
-            // involvedMovieCast ist lazy → würde OHNE @Transactional
-            // eine LazyInitializationException werfen!
-            tmp.get(0).getInvolvedMovieCast().forEach(cast -&gt;
+            // involvedMovieCast ist lazy-geladen → OHNE @Transactional: LazyInitializationException!
+            tmp.get(0).getInvolvedMovieCast().forEach(cast ->
                 result.add(cast.getForename())
             );
         }
@@ -1156,122 +1014,102 @@ public class MovieServiceImpl implements MovieService {
         if (!newMovieName.isEmpty()) {
             Movie tmp = this.movieRepository.findById(id).get();
             tmp.setTitle(newMovieName);
-            // Hibernate erkennt die Änderung automatisch und führt UPDATE aus
-            // KEIN movieRepository.save(tmp) nötig innerhalb @Transactional!
+            // Hibernate erkennt Änderung und führt UPDATE automatisch aus
+            // KEIN movieRepository.save(tmp) nötig!
         }
     }
 }</code></pre>
 
     <div class="box box-green">
-      <strong>Dirty Checking erklärt:</strong> Innerhalb einer Transaktion merkt sich Hibernate den Zustand aller geladenen Objekte. Beim Commit vergleicht es den aktuellen Zustand mit dem Anfangszustand und führt automatisch UPDATEs für alle geänderten Objekte aus.
+      <strong>Dirty Checking:</strong> Innerhalb einer Transaktion merkt sich Hibernate den Zustand aller geladenen Objekte. Beim Commit vergleicht es den aktuellen mit dem ursprünglichen Zustand und führt automatisch UPDATEs aus.
     </div>
 
     <div class="box box-yellow">
-      <strong>Standard-Transaktionen:</strong> Alle CRUD-Operationen des JpaRepository (<code>save</code>, <code>findById</code>, <code>findAll</code>, <code>delete</code>) führen bereits automatisch als Transaktionen aus.
+      <strong>Standard-Transaktionen:</strong> Alle CRUD-Operationen des JpaRepository (<code>save</code>, <code>findById</code>, <code>findAll</code>, <code>delete</code>) laufen bereits automatisch als Transaktionen.
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════
        5. KONFIGURATION
-  ═══════════════════════════════════════════════════════════════ -->
+  ══════════════════════════════════════════════════ -->
   <section id="config">
     <h1 class="sec">5 · Konfiguration &amp; Tools</h1>
 
     <h2 class="sub">application.properties</h2>
-    <p>Konfigurationsdatei für Spring Boot. Liegt in <code>src/main/resources/</code>. Steuert Datenbank, Logging, Server-Port und vieles mehr.</p>
 
-    <pre><code class="language-properties"># H2 In-Memory Datenbank aktivieren
+    <pre><code class="language-properties"># H2 In-Memory Datenbank
 spring.h2.console.enabled=true
-spring.h2.console.path=/h2                     # H2-Konsole erreichbar unter localhost:8080/h2
+spring.h2.console.path=/h2
 
-# Datenbank-Verbindung
-spring.datasource.url=jdbc:h2:mem:testdb        # URL der In-Memory-DB (mem = nur im RAM)
+# Datenbankverbindung
+spring.datasource.url=jdbc:h2:mem:testdb
 spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 spring.datasource.username=sa
-spring.datasource.password=                     # leer = kein Passwort
+spring.datasource.password=
 
 # Hibernate
-spring.jpa.show-sql=true                        # SQL-Statements im Log anzeigen (nützlich zum Debuggen)
-spring.jpa.hibernate.ddl-auto=create-drop       # Schema bei Start anlegen, bei Ende löschen
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=create-drop
 
 # Logging
 logging.level.org.springframework.jdbc.core.JdbcTemplate=DEBUG</code></pre>
 
     <h3 class="sub2">ddl-auto Optionen</h3>
-
-    <div class="einfach">
-      <p><code>create-drop</code> ist ideal für Entwicklung und Tests: Die Datenbank wird bei jedem Start frisch erstellt und beim Stopp wieder gelöscht. Jeder Start beginnt mit einer leeren Datenbank.</p>
-    </div>
-
     <table>
       <tr><th>Wert</th><th>Bedeutung</th></tr>
-      <tr><td><code>create-drop</code></td><td>Schema anlegen beim Start, löschen beim Stopp → ideal für Tests/Entwicklung</td></tr>
+      <tr><td><code>create-drop</code></td><td>Schema bei Start anlegen, bei Stopp löschen → ideal für Tests/Entwicklung</td></tr>
       <tr><td><code>create</code></td><td>Schema anlegen beim Start (bestehende Daten werden gelöscht)</td></tr>
-      <tr><td><code>update</code></td><td>Schema aktualisieren (Daten bleiben erhalten, neue Spalten werden hinzugefügt)</td></tr>
-      <tr><td><code>validate</code></td><td>Schema nur validieren, keine Änderungen (für Produktion)</td></tr>
+      <tr><td><code>update</code></td><td>Schema aktualisieren (Daten bleiben erhalten)</td></tr>
+      <tr><td><code>validate</code></td><td>Nur validieren, keine Änderungen (für Produktion)</td></tr>
       <tr><td><code>none</code></td><td>Nichts tun (manuelles Schema-Management)</td></tr>
     </table>
 
-    <h2 class="sub" id="lombok">Lombok-Annotationen</h2>
+    <h2 class="sub" id="lombok">Lombok</h2>
 
     <div class="einfach">
-      <p>Lombok ist eine Bibliothek, die nervigen Boilerplate-Code automatisch generiert. Statt 20 Getter/Setter manuell zu schreiben, schreibst du einfach <code>@Getter @Setter</code> über die Klasse – fertig.</p>
-      <p>Für JPA ist <code>@NoArgsConstructor</code> besonders wichtig, weil JPA einen leeren Konstruktor zwingend benötigt.</p>
-    </div>
-
-    <div class="card">
-      Lombok ist eine Java-Bibliothek, die Boilerplate-Code (Getter, Setter, Konstruktoren) durch Annotationen automatisch generiert.
+      <p>Lombok generiert nervigen Boilerplate-Code automatisch. Statt 20 Getter/Setter manuell zu schreiben, schreibst du <code>@Getter @Setter</code> über die Klasse. Für JPA ist <code>@NoArgsConstructor</code> besonders wichtig – JPA braucht zwingend einen leeren Konstruktor.</p>
     </div>
 
     <table>
       <tr><th>Annotation</th><th>Generiert</th></tr>
-      <tr><td><code>@Getter</code></td><td>Getter-Methoden für alle Felder (<code>getTitle()</code>, <code>getId()</code>, …)</td></tr>
-      <tr><td><code>@Setter</code></td><td>Setter-Methoden für alle Felder (<code>setTitle()</code>, <code>setId()</code>, …)</td></tr>
-      <tr><td><code>@NoArgsConstructor</code></td><td>Leerer Konstruktor ohne Parameter – <strong>JPA-Pflicht!</strong></td></tr>
+      <tr><td><code>@Getter</code></td><td>Getter-Methoden für alle Felder</td></tr>
+      <tr><td><code>@Setter</code></td><td>Setter-Methoden für alle Felder</td></tr>
+      <tr><td><code>@NoArgsConstructor</code></td><td>Leerer Konstruktor – <strong>JPA-Pflicht!</strong></td></tr>
       <tr><td><code>@AllArgsConstructor</code></td><td>Konstruktor mit allen Feldern als Parameter</td></tr>
-      <tr><td><code>@Data</code></td><td>Kombiniert @Getter + @Setter + @ToString + @EqualsAndHashCode + @RequiredArgsConstructor</td></tr>
-      <tr><td><code>@Slf4j</code></td><td>Erstellt ein <code>log</code>-Logger-Objekt (SLF4J) automatisch → sofort <code>log.info(...)</code> nutzen</td></tr>
+      <tr><td><code>@Data</code></td><td>@Getter + @Setter + @ToString + @EqualsAndHashCode + @RequiredArgsConstructor</td></tr>
+      <tr><td><code>@Slf4j</code></td><td>Erstellt <code>log</code>-Logger automatisch → sofort <code>log.info(...)</code> nutzbar</td></tr>
     </table>
 
     <pre><code class="language-java">@Entity
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor  // Pflicht für JPA! Hibernate braucht leeren Konstruktor.
 public class Movie {
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private long id;
     private String title;
-    // Lombok generiert automatisch: getId(), setId(), getTitle(), setTitle()
+    // Lombok generiert: getId(), setId(), getTitle(), setTitle()
 }
 
-// @Slf4j Beispiel
 @Component
 @Slf4j  // Lombok erstellt automatisch: private static final Logger log = ...
 public class ManualTestBean {
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
-        log.info("Anwendung gestartet!");  // log-Objekt ist automatisch verfügbar
-        log.debug("Debug-Nachricht");
+        log.info("Anwendung gestartet!");  // log-Objekt ist automatisch da
     }
 }</code></pre>
 
     <h2 class="sub" id="h2">H2 In-Memory Datenbank</h2>
 
     <div class="einfach">
-      <p>H2 ist eine Datenbank die komplett im RAM läuft – kein externes Datenbankserver nötig. Perfekt für Entwicklung und Tests. Wenn die Spring-App stoppt, sind alle Daten weg.</p>
+      <p>H2 läuft komplett im RAM – kein externes Datenbankserver nötig. Wenn die App stoppt, sind alle Daten weg. Perfekt für Entwicklung und Tests.</p>
       <p>Im Browser kannst du auf <code>http://localhost:8080/h2</code> eine grafische Oberfläche öffnen und die Tabellen direkt ansehen.</p>
     </div>
 
-    <div class="card">
-      H2 ist eine leichtgewichtige Java-Datenbank, die vollständig im Arbeitsspeicher läuft – ideal für Entwicklung und Tests. Nach dem Stopp der Anwendung sind alle Daten weg.<br><br>
-      <strong>H2-Konsole:</strong> Im Browser unter <code>http://localhost:8080/h2</code> erreichbar (wenn <code>spring.h2.console.enabled=true</code> gesetzt ist).
-    </div>
-
-    <h2 class="sub">ManualTestBean – Integrationstests beim Start</h2>
+    <h2 class="sub">ManualTestBean</h2>
 
     <div class="einfach">
-      <p>Anstatt formaler Unit-Tests wird im Projekt eine <code>ManualTestBean</code> verwendet. Das ist eine ganz normale <code>@Component</code>-Klasse, die nach dem Anwendungsstart automatisch ausgeführt wird und Testdaten anlegt und Abfragen demonstriert. Ergebnis sieht du im Konsolen-Log.</p>
+      <p>Anstatt formaler Unit-Tests verwendet das Projekt eine <code>ManualTestBean</code>: eine <code>@Component</code>-Klasse die nach dem Anwendungsstart automatisch läuft, Testdaten anlegt und Abfragen demonstriert. Ergebnisse sieht man im Konsolen-Log.</p>
     </div>
 
     <pre><code class="language-java">@Component
@@ -1284,22 +1122,20 @@ public class ManualTestBean {
         this.movieRepository = movieRepository;
     }
 
-    // Diese Methode wird automatisch nach dem vollständigen Start der App aufgerufen
+    // Automatisch nach vollständigem App-Start aufgerufen
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
-        // Testdaten anlegen und speichern
         Movie movie = new Movie();
         movie.setTitle("Interstellar");
         movie.setImdbRating(8.7);
         movieRepository.save(movie);
 
-        // Abfragen testen und im Log ausgeben
         log.info("Alle Filme: {}", movieRepository.findAll());
         log.info("Suche 'Inter': {}", movieRepository.findByTitleContaining("Inter"));
     }
 }</code></pre>
 
-    <h2 class="sub">Build-Konfiguration (build.gradle.kts)</h2>
+    <h2 class="sub">Build (build.gradle.kts)</h2>
     <pre><code class="language-kotlin">plugins {
     java
     id("org.springframework.boot") version "3.2.1"
@@ -1308,68 +1144,62 @@ public class ManualTestBean {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)  // Java 21 wird automatisch heruntergeladen
+        languageVersion = JavaLanguageVersion.of(21)  // JDK 21 wird automatisch heruntergeladen
     }
+}
+
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-parameters")  // Named JPQL Parameters (@Param)
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")       // Aufgabe 1-3: HTTP, Controller
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa") // Aufgabe 2-3: JPA, Hibernate, Repositories
-    runtimeOnly("com.h2database:h2")                                         // Aufgabe 2-3: H2 In-Memory DB
-    compileOnly("org.projectlombok:lombok")                                  // Lombok Annotationen
-    annotationProcessor("org.projectlombok:lombok")                          // Lombok Code-Generierung
-    testImplementation("org.springframework.boot:spring-boot-starter-test")  // JUnit Tests
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly("com.h2database:h2")
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }</code></pre>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════
        6. VOLLSTÄNDIGE CODEBEISPIELE
-  ═══════════════════════════════════════════════════════════════ -->
+  ══════════════════════════════════════════════════ -->
   <section id="code-beispiele">
-    <h1 class="sec">6 · Vollständige Codebeispiele aus dem Projekt</h1>
+    <h1 class="sec">6 · Vollständige Codebeispiele</h1>
 
-    <h2 class="sub">Aufgabe 1 – Dependency Injection <span class="badge badge-aufgabe1">Aufgabe 1</span></h2>
+    <h2 class="sub">Aufgabe 1 – DI <span class="badge badge-aufgabe1">Aufgabe 1</span></h2>
 
     <div class="einfach">
-      <p>Aufgabe 1 zeigt das DI-Grundprinzip: Der Controller bekommt den Service <em>injiziert</em> statt ihn selbst zu erstellen. Interfaces ermöglichen lose Kopplung – der Controller weiß nur, dass es ein <code>MovieService</code> gibt, nicht welche konkrete Klasse dahinter steckt.</p>
+      <p>Controller bekommt den Service injiziert statt ihn selbst zu erstellen. Interfaces ermöglichen lose Kopplung.</p>
     </div>
 
-    <pre><code class="language-java">// Interface (definiert den Vertrag – was kann der Service?)
-public interface MovieService {
+    <pre><code class="language-java">public interface MovieService {
     String getName();
 }
 
-// Implementierung mit @Service (Spring verwaltet diese Klasse)
 @Service
 public class MovieServiceImpl implements MovieService {
     @Override
-    public String getName() {
-        return "MovieService";
-    }
+    public String getName() { return "MovieService"; }
 }
 
-// Controller mit Constructor Injection (Best Practice!)
 @Controller
 public class MovieControllerImpl implements MovieController {
-
-    private final MovieService movieService;    // Interface-Typ, nicht konkrete Klasse!
+    private final MovieService movieService;
     private final ArtistService artistService;
 
-    // Spring findet automatisch MovieServiceImpl und ArtistServiceImpl und injiziert sie
-    public MovieControllerImpl(MovieService movieService,
-                                ArtistService artistService) {
+    // Spring findet MovieServiceImpl und ArtistServiceImpl automatisch
+    public MovieControllerImpl(MovieService movieService, ArtistService artistService) {
         this.movieService = movieService;
         this.artistService = artistService;
     }
 
     @Override
-    public String getMovieServiceName() {
-        return movieService.getName();  // Aufruf über Interface
-    }
+    public String getMovieServiceName() { return movieService.getName(); }
 }
 
-// Spring-Boot-Einstiegspunkt
-@SpringBootApplication  // = @Configuration + @EnableAutoConfiguration + @ComponentScan
+@SpringBootApplication
 public class SpringDataApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringDataApplication.class, args);
@@ -1378,118 +1208,84 @@ public class SpringDataApplication {
 
     <h2 class="sub">Aufgabe 2 – Entity &amp; Repository <span class="badge badge-aufgabe2">Aufgabe 2</span></h2>
 
-    <div class="einfach">
-      <p>Aufgabe 2 fügt die Datenbankschicht hinzu: <code>@Entity</code> markiert die Klasse für die DB, das Repository Interface gibt dir kostenlos alle CRUD-Methoden plus eigene Abfragen.</p>
-    </div>
-
-    <pre><code class="language-java">// Movie Entity – wird zur MOVIE-Tabelle in der DB
-@Entity
+    <pre><code class="language-java">@Entity
 @Getter @Setter @NoArgsConstructor
 public class Movie {
-    @Id @GeneratedValue   // id = auto-increment Primärschlüssel
-    private long id;
-
+    @Id @GeneratedValue private long id;
     private String title;
     private double duration;
-    private LocalDate premiereDate;   // DATE in DB
+    private LocalDate premiereDate;
     private String description;
     private String trailerUrl;
     private String coverImgUrl;
     private double imdbRating;
 }
 
-// Repository – Spring implementiert das automatisch, kein Code nötig!
 @Repository
-public interface MovieRepository extends JpaRepository&lt;Movie, Long&gt; {
+public interface MovieRepository extends JpaRepository<Movie, Long> {
+    List<Movie> findByTitleContaining(String substring);
+    List<Movie> findByImdbRatingGreaterThan(double rating);
+    List<Movie> findByPremiereDateAfter(LocalDate reference);
 
-    // Derived Queries: Spring liest den Namen und baut die SQL-Query
-    List&lt;Movie&gt; findByTitleContaining(String substring);
-    // → SELECT * FROM movie WHERE title LIKE '%substring%'
-
-    List&lt;Movie&gt; findByImdbRatingGreaterThan(double rating);
-    // → SELECT * FROM movie WHERE imdb_rating > rating
-
-    List&lt;Movie&gt; findByPremiereDateAfter(LocalDate reference);
-    // → SELECT * FROM movie WHERE premiere_date > reference
-
-    // Manuelle JPQL-Query für komplexere Fälle
     @Query("SELECT m FROM Movie m WHERE m.title = :param1")
-    List&lt;Movie&gt; findAllMoviesByTitle(@Param("param1") String title);
+    List<Movie> findAllMoviesByTitle(@Param("param1") String title);
 }</code></pre>
 
-    <h2 class="sub">Aufgabe 3 – Vollständige Entitäten mit allen Beziehungen <span class="badge badge-aufgabe3">Aufgabe 3</span></h2>
-
-    <div class="einfach">
-      <p>Aufgabe 3 ist das vollständige Modell: Movie hat Beziehungen zu Director (N:1), MovieCast (M:N), Soundtrack (1:1) und Award (1:N). Hier kommt alles zusammen.</p>
-    </div>
+    <h2 class="sub">Aufgabe 3 – Alle Entities mit Beziehungen <span class="badge badge-aufgabe3">Aufgabe 3</span></h2>
 
     <pre><code class="language-java">// Director Entity
-@Entity
-@Getter @Setter @NoArgsConstructor
+@Entity @Getter @Setter @NoArgsConstructor
 public class Director {
-    @Id @GeneratedValue
-    private long id;
+    @Id @GeneratedValue private long id;
     private String forename;
     private String surname;
 
-    // Ein Director hat viele Movies (Rückseite der Beziehung)
     @OneToMany(mappedBy = "director", cascade = CascadeType.ALL)
-    private List&lt;Movie&gt; movies;
+    private List<Movie> movies;
 }
 
-// MovieCast Entity (Schauspieler)
-@Entity
-@Getter @Setter @NoArgsConstructor
+// MovieCast Entity
+@Entity @Getter @Setter @NoArgsConstructor
 public class MovieCast {
-    @Id @GeneratedValue
-    private long id;
+    @Id @GeneratedValue private long id;
     private String forename;
     private String surname;
 
-    // Rückseite der M:N Beziehung
     @ManyToMany(mappedBy = "involvedMovieCast", cascade = CascadeType.PERSIST)
-    private List&lt;Movie&gt; participatedMovies;
+    private List<Movie> participatedMovies;
 }
 
 // Soundtrack Entity
-@Entity
-@Getter @Setter @NoArgsConstructor
+@Entity @Getter @Setter @NoArgsConstructor
 public class Soundtrack {
-    @Id @GeneratedValue
-    private long id;
+    @Id @GeneratedValue private long id;
     private String name;
     private String author_forename;
     private String author_surname;
     private LocalDate releaseDate;
 
-    // Soundtrack ist Besitzer der 1:1 Beziehung (hat den FK movie_id)
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "movie_id")
+    @JoinColumn(name = "movie_id")   // Soundtrack ist Besitzer (hat den FK)
     private Movie movie;
 }
 
-// Award Entity (nur in Lösung)
-@Entity
-@Getter @Setter @NoArgsConstructor
+// Award Entity
+@Entity @Getter @Setter @NoArgsConstructor
 public class Award {
-    @Id @GeneratedValue
-    private long id;
-    private String academy;      // z.B. "Oscar Academy"
-    private String category;     // z.B. "Best Picture"
+    @Id @GeneratedValue private long id;
+    private String academy;
+    private String category;
     private int yearAwarded;
 
-    // Award ist Besitzer der N:1 Beziehung zu Movie
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "movie_id")
     private Movie movie;
 }
 
 // Movie Entity – vollständig mit ALLEN Beziehungen
-@Entity
-@Getter @Setter @NoArgsConstructor
+@Entity @Getter @Setter @NoArgsConstructor
 public class Movie {
-    @Id @GeneratedValue
-    private long id;
+    @Id @GeneratedValue private long id;
     private String title;
     private double duration;
     private LocalDate premiereDate;
@@ -1498,146 +1294,224 @@ public class Movie {
     private String coverImgUrl;
     private double imdbRating;
 
-    // N:1 zu Director (Movie ist Besitzer, hat FK director_id)
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "director_id", nullable = true)
     private Director director;
 
-    // M:N zu MovieCast (Movie ist Besitzer, definiert Zwischentabelle)
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "movie_moviecast",
+    @JoinTable(name = "movie_moviecast",
         joinColumns =        { @JoinColumn(name = "movie_id",  referencedColumnName = "id") },
-        inverseJoinColumns = { @JoinColumn(name = "cast_id",   referencedColumnName = "id") }
-    )
-    private List&lt;MovieCast&gt; involvedMovieCast;
+        inverseJoinColumns = { @JoinColumn(name = "cast_id",   referencedColumnName = "id") })
+    private List<MovieCast> involvedMovieCast;
 
-    // 1:1 zu Soundtrack (Soundtrack ist Besitzer, Movie ist Rückseite)
     @OneToOne(mappedBy = "movie", cascade = CascadeType.ALL)
     private Soundtrack soundtrack;
 
-    // 1:N zu Award (Award ist Besitzer, Movie ist Rückseite)
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List&lt;Award&gt; awards;
-}</code></pre>
-
-    <h2 class="sub">Aufgabe 3 – Beziehungen korrekt setzen <span class="badge badge-aufgabe3">Aufgabe 3</span></h2>
-
-    <div class="einfach">
-      <p>Hier siehst du wie man alle Beziehungen im Code korrekt verknüpft. Wichtig: Immer die Besitzer-Seite setzen, und nur <code>movieRepository.save(movie)</code> aufrufen – Cascade kümmert sich um den Rest.</p>
-    </div>
-
-    <pre><code class="language-java">@Component
-@Slf4j
-public class ManualTestBean {
-
-    private MovieRepository movieRepository;
-    private MovieService movieService;
-
-    public ManualTestBean(MovieRepository movieRepository, MovieService movieService) {
-        this.movieRepository = movieRepository;
-        this.movieService = movieService;
-    }
-
-    @EventListener(ApplicationReadyEvent.class)
-    public void runAfterStartup() {
-
-        // Entities erstellen
-        Director nolan = new Director();
-        nolan.setForename("Christopher"); nolan.setSurname("Nolan");
-
-        MovieCast actor = new MovieCast();
-        actor.setForename("Matthew"); actor.setSurname("McConaughey");
-
-        Soundtrack st = new Soundtrack();
-        st.setName("Interstellar OST");
-        st.setAuthor_forename("Hans"); st.setAuthor_surname("Zimmer");
-
-        Movie interstellar = new Movie();
-        interstellar.setTitle("Interstellar");
-        interstellar.setImdbRating(8.7);
-
-        // ── Beziehungen setzen ────────────────────────────────
-        // 1. N:1: Movie → Director
-        interstellar.setDirector(nolan);             // Besitzer-Seite (Movie hat FK)
-        nolan.setMovies(new ArrayList&lt;&gt;(List.of(interstellar))); // Gegenseite
-
-        // 2. M:N: Movie ↔ MovieCast
-        interstellar.setInvolvedMovieCast(new ArrayList&lt;&gt;(List.of(actor))); // Besitzer-Seite
-        actor.setParticipatedMovies(new ArrayList&lt;&gt;(List.of(interstellar))); // Gegenseite
-
-        // 3. 1:1: Movie ↔ Soundtrack (Soundtrack ist Besitzer!)
-        st.setMovie(interstellar);                   // Besitzer-Seite (Soundtrack hat FK)
-        interstellar.setSoundtrack(st);              // Gegenseite
-
-        // ── Speichern ──────────────────────────────────────────
-        // Nur Movie speichern! CascadeType.ALL kümmert sich um Director, Cast, Soundtrack
-        movieRepository.save(interstellar);
-
-        // ── Abfragen demonstrieren ─────────────────────────────
-        log.info("Alle Filme: {}",
-            movieRepository.findAll().stream().map(Movie::getTitle).toList());
-        log.info("Filme mit 'Inter': {}",
-            movieRepository.findByTitleContaining("Inter"));
-        log.info("Cast von Interstellar: {}",
-            movieService.getCastOfMovie("Interstellar"));  // @Transactional in Service!
-        log.info("Filme mit Zimmer-Soundtrack: {}",
-            movieRepository.findAllMoviesWithSoundtrackAuthor("Zimmer"));
-    }
+    private List<Award> awards;
 }</code></pre>
 
     <hr>
 
-    <!-- Zusammenfassung Beziehungstabelle -->
-    <h2 class="sub">Beziehungsübersicht im Projekt (Zusammenfassung)</h2>
+    <h2 class="sub">Beziehungsübersicht</h2>
     <table>
-      <tr>
-        <th>Beziehung</th><th>Typ</th><th>Besitzer</th><th>Cascade</th><th>Fetch Default</th><th>DB-Struktur</th>
-      </tr>
-      <tr>
-        <td>Movie → Director</td><td><code>@ManyToOne</code></td><td>Movie</td><td>ALL</td><td>EAGER</td><td>FK <code>director_id</code> in Movie</td>
-      </tr>
-      <tr>
-        <td>Director → Movies</td><td><code>@OneToMany</code></td><td>– (mappedBy)</td><td>ALL</td><td>LAZY</td><td>–</td>
-      </tr>
-      <tr>
-        <td>Movie ↔ MovieCast</td><td><code>@ManyToMany</code></td><td>Movie</td><td>ALL / PERSIST</td><td>LAZY</td><td>Zwischentabelle <code>movie_moviecast</code></td>
-      </tr>
-      <tr>
-        <td>Movie ↔ Soundtrack</td><td><code>@OneToOne</code></td><td>Soundtrack</td><td>ALL</td><td>EAGER</td><td>FK <code>movie_id</code> in Soundtrack</td>
-      </tr>
-      <tr>
-        <td>Movie → Awards</td><td><code>@OneToMany</code></td><td>– (mappedBy)</td><td>ALL</td><td>EAGER (explizit)</td><td>FK <code>movie_id</code> in Award</td>
-      </tr>
+      <tr><th>Beziehung</th><th>Typ</th><th>Besitzer</th><th>Cascade</th><th>Fetch</th><th>DB</th></tr>
+      <tr><td>Movie → Director</td><td><code>@ManyToOne</code></td><td>Movie</td><td>ALL</td><td>EAGER</td><td>FK <code>director_id</code> in Movie</td></tr>
+      <tr><td>Director → Movies</td><td><code>@OneToMany</code></td><td>– (mappedBy)</td><td>ALL</td><td>LAZY</td><td>–</td></tr>
+      <tr><td>Movie ↔ MovieCast</td><td><code>@ManyToMany</code></td><td>Movie</td><td>ALL/PERSIST</td><td>LAZY</td><td>Zwischentabelle <code>movie_moviecast</code></td></tr>
+      <tr><td>Movie ↔ Soundtrack</td><td><code>@OneToOne</code></td><td>Soundtrack</td><td>ALL</td><td>EAGER</td><td>FK <code>movie_id</code> in Soundtrack</td></tr>
+      <tr><td>Movie → Awards</td><td><code>@OneToMany</code></td><td>– (mappedBy)</td><td>ALL</td><td>EAGER (explizit)</td><td>FK <code>movie_id</code> in Award</td></tr>
     </table>
 
-    <!-- Schnellreferenz -->
-    <h2 class="sub">Schnellreferenz: Alle JPA-Annotationen</h2>
+    <h2 class="sub">Schnellreferenz JPA-Annotationen</h2>
     <table>
       <tr><th>Annotation</th><th>Typ</th><th>Bedeutung</th></tr>
-      <tr><td><span class="ann ann-orange">@Entity</span></td><td>Klasse</td><td>Klasse ist persistierbare DB-Entität → Hibernate erstellt Tabelle</td></tr>
-      <tr><td><span class="ann ann-orange">@Id</span></td><td>Feld</td><td>Primärschlüssel (eindeutiger Identifikator)</td></tr>
-      <tr><td><span class="ann ann-orange">@GeneratedValue</span></td><td>Feld</td><td>Primärschlüssel wird von Hibernate auto-generiert</td></tr>
-      <tr><td><span class="ann ann-orange">@Column</span></td><td>Feld</td><td>Spaltenname/Constraints explizit festlegen</td></tr>
-      <tr><td><span class="ann ann-orange">@Table</span></td><td>Klasse</td><td>Tabellenname festlegen (sonst = Klassenname)</td></tr>
-      <tr><td><span class="ann ann-orange">@ManyToOne</span></td><td>Feld</td><td>N:1-Beziehung. Diese Seite hat den FK. Besitzer-Seite.</td></tr>
-      <tr><td><span class="ann ann-orange">@OneToMany</span></td><td>Feld</td><td>1:N-Beziehung. Meist mit mappedBy = nicht-besitzende Seite.</td></tr>
+      <tr><td><span class="ann ann-orange">@Entity</span></td><td>Klasse</td><td>Persistierbare DB-Entität → Hibernate erstellt Tabelle</td></tr>
+      <tr><td><span class="ann ann-orange">@Id</span></td><td>Feld</td><td>Primärschlüssel</td></tr>
+      <tr><td><span class="ann ann-orange">@GeneratedValue</span></td><td>Feld</td><td>Primärschlüssel auto-generiert</td></tr>
+      <tr><td><span class="ann ann-orange">@ManyToOne</span></td><td>Feld</td><td>N:1-Beziehung. Besitzer-Seite (hat FK).</td></tr>
+      <tr><td><span class="ann ann-orange">@OneToMany</span></td><td>Feld</td><td>1:N-Beziehung. Meist mappedBy = nicht-besitzend.</td></tr>
       <tr><td><span class="ann ann-orange">@ManyToMany</span></td><td>Feld</td><td>M:N-Beziehung. Besitzer-Seite hat @JoinTable.</td></tr>
-      <tr><td><span class="ann ann-orange">@OneToOne</span></td><td>Feld</td><td>1:1-Beziehung. Eine Seite hat FK, andere hat mappedBy.</td></tr>
-      <tr><td><span class="ann ann-orange">@JoinColumn</span></td><td>Feld</td><td>Foreign-Key-Spaltenname festlegen</td></tr>
-      <tr><td><span class="ann ann-orange">@JoinTable</span></td><td>Feld</td><td>Zwischentabelle für @ManyToMany definieren</td></tr>
-      <tr><td><span class="ann ann-orange">@Query</span></td><td>Methode</td><td>Manuelle JPQL-Query definieren</td></tr>
+      <tr><td><span class="ann ann-orange">@OneToOne</span></td><td>Feld</td><td>1:1-Beziehung. Eine Seite FK, andere mappedBy.</td></tr>
+      <tr><td><span class="ann ann-orange">@JoinColumn</span></td><td>Feld</td><td>FK-Spaltenname festlegen</td></tr>
+      <tr><td><span class="ann ann-orange">@JoinTable</span></td><td>Feld</td><td>Zwischentabelle für @ManyToMany</td></tr>
+      <tr><td><span class="ann ann-orange">@Query</span></td><td>Methode</td><td>Manuelle JPQL-Query</td></tr>
       <tr><td><span class="ann ann-orange">@Param</span></td><td>Parameter</td><td>JPQL-Parameter binden (<code>:name</code>)</td></tr>
     </table>
   </section>
-
 </main>
 </div>
 
-<!-- Prism.js Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-kotlin.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-properties.min.js"></script>
+<!-- ═══════ INLINE SYNTAX HIGHLIGHTER ════════════════
+     Kein CDN – funktioniert komplett offline.
+     Catppuccin Mocha Farben.
+════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  /* ── Catppuccin Mocha Syntax Colors ─────────────── */
+  var C = {
+    keyword:    '#cba6f7',  // mauve
+    string:     '#a6e3a1',  // green
+    number:     '#fab387',  // peach
+    comment:    '#6c7086',  // overlay0
+    annotation: '#f38ba8',  // red
+    type:       '#89b4fa',  // blue
+    func:       '#89dceb',  // sky
+    bool_null:  '#fab387',  // peach
+    operator:   '#89dceb',  // sky
+  };
+
+  var JAVA_KW = new Set((
+    'abstract,assert,boolean,break,byte,case,catch,char,class,const,continue,' +
+    'default,do,double,else,enum,extends,final,finally,float,for,goto,if,' +
+    'implements,import,instanceof,int,interface,long,native,new,package,' +
+    'private,protected,public,return,short,static,strictfp,super,switch,' +
+    'synchronized,this,throw,throws,transient,try,void,volatile,while,' +
+    'var,record,sealed,permits'
+  ).split(','));
+
+  var BOOL_NULL = new Set(['true', 'false', 'null']);
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function span(color, text, italic) {
+    var s = 'color:' + color + (italic ? ';font-style:italic' : '');
+    return '<span style="' + s + '">' + esc(text) + '</span>';
+  }
+
+  /* ── Java / Kotlin tokenizer ─────────────────────── */
+  function highlightJava(raw) {
+    var out = '';
+    var i = 0;
+    var len = raw.length;
+
+    while (i < len) {
+      var ch = raw[i];
+      var ch2 = raw[i + 1] || '';
+
+      // Multi-line comment
+      if (ch === '/' && ch2 === '*') {
+        var end = raw.indexOf('*/', i + 2);
+        var s = end < 0 ? raw.slice(i) : raw.slice(i, end + 2);
+        out += span(C.comment, s, true);
+        i += s.length;
+      }
+      // Single-line comment
+      else if (ch === '/' && ch2 === '/') {
+        var end2 = raw.indexOf('\n', i);
+        var s2 = end2 < 0 ? raw.slice(i) : raw.slice(i, end2);
+        out += span(C.comment, s2, true);
+        i += s2.length;
+      }
+      // String literal
+      else if (ch === '"') {
+        var j = i + 1;
+        while (j < len && raw[j] !== '"' && raw[j] !== '\n') {
+          if (raw[j] === '\\') j++;
+          j++;
+        }
+        if (j < len && raw[j] === '"') j++;
+        out += span(C.string, raw.slice(i, j));
+        i = j;
+      }
+      // Char literal
+      else if (ch === "'") {
+        var j2 = i + 1;
+        while (j2 < len && raw[j2] !== "'" && raw[j2] !== '\n') {
+          if (raw[j2] === '\\') j2++;
+          j2++;
+        }
+        if (j2 < len && raw[j2] === "'") j2++;
+        out += span(C.string, raw.slice(i, j2));
+        i = j2;
+      }
+      // Annotation @Name
+      else if (ch === '@' && /[A-Za-z]/.test(ch2)) {
+        var j3 = i + 1;
+        while (j3 < len && /\w/.test(raw[j3])) j3++;
+        out += span(C.annotation, raw.slice(i, j3));
+        i = j3;
+      }
+      // Number
+      else if (/[0-9]/.test(ch) || (ch === '.' && /[0-9]/.test(ch2))) {
+        var j4 = i;
+        while (j4 < len && /[0-9._xXaAbBcCdDeEfFLlUu]/.test(raw[j4])) j4++;
+        out += span(C.number, raw.slice(i, j4));
+        i = j4;
+      }
+      // Identifier / keyword / type / function
+      else if (/[A-Za-z_$]/.test(ch)) {
+        var j5 = i;
+        while (j5 < len && /[\w$]/.test(raw[j5])) j5++;
+        var word = raw.slice(i, j5);
+
+        if (JAVA_KW.has(word)) {
+          out += span(C.keyword, word);
+        } else if (BOOL_NULL.has(word)) {
+          out += span(C.bool_null, word);
+        } else if (/^[A-Z]/.test(word)) {
+          // Capital letter → type (check if method call)
+          var k = j5;
+          while (k < len && raw[k] === ' ') k++;
+          out += span(raw[k] === '(' ? C.func : C.type, word);
+        } else {
+          // lowercase → check for method call
+          var k2 = j5;
+          while (k2 < len && raw[k2] === ' ') k2++;
+          out += (raw[k2] === '(') ? span(C.func, word) : esc(word);
+        }
+        i = j5;
+      }
+      // Everything else
+      else {
+        out += esc(ch);
+        i++;
+      }
+    }
+    return out;
+  }
+
+  /* ── Properties tokenizer ────────────────────────── */
+  function highlightProperties(raw) {
+    return raw.split('\n').map(function (line) {
+      var trimmed = line.trim();
+      if (trimmed === '') return '';
+      if (trimmed[0] === '#') {
+        return '<span style="color:' + C.comment + ';font-style:italic">' + esc(line) + '</span>';
+      }
+      var eq = line.indexOf('=');
+      if (eq > 0) {
+        var key = line.slice(0, eq);
+        var val = line.slice(eq + 1);
+        return (
+          '<span style="color:' + C.type + '">' + esc(key) + '</span>' +
+          '<span style="color:' + C.operator + '">=</span>' +
+          '<span style="color:' + C.string + '">' + esc(val) + '</span>'
+        );
+      }
+      return esc(line);
+    }).join('\n');
+  }
+
+  /* ── Apply to all code blocks ────────────────────── */
+  document.querySelectorAll('pre code[class]').forEach(function (block) {
+    var lang = block.className.replace('language-', '').trim();
+    var raw = block.textContent; // HTML entities are decoded here automatically
+    var html;
+
+    if (lang === 'java' || lang === 'kotlin') {
+      html = highlightJava(raw);
+    } else if (lang === 'properties') {
+      html = highlightProperties(raw);
+    } else {
+      html = esc(raw);
+    }
+
+    block.innerHTML = html;
+  });
+})();
+</script>
 </body>
 </html>
